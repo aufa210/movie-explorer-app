@@ -1,0 +1,21 @@
+@import '../variables/fonts';
+@import '../functions/rem-calc';
+
+:root {
+  font-family: $font-family-red-hat-display;
+}
+
+body {
+  background: get-color('neutral', 600);
+  // overflow: hidden;
+}
+
+.container {
+  max-width: rem-calc(1216);
+  margin: 0 auto;
+  padding: 0 rem-calc(20);
+
+  @include md {
+    padding: 0 rem-calc(32);
+  }
+}
