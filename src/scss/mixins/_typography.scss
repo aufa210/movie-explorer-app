@@ -1,19 +1,25 @@
+// prettier-ignore
 $sizes: (
-    'display-3xl': (font-size: rem-calc(60), line-height: rem-calc(72)),
-    'display-2xl': (font-size: rem-calc(48), line-height: rem-calc(60)),
-    'display-xl': (font-size: rem-calc(40), line-height: rem-calc(48), letter-spacing: -0.02em),
-    'display-lg': (font-size: rem-calc(36), line-height: rem-calc(44), letter-spacing: -0.02em),
-    'display-md': (font-size: rem-calc(32), line-height: rem-calc(40)),
-    'display-sm': (font-size: rem-calc(28), line-height: rem-calc(38)),
-    'display-xs': (font-size: rem-calc(24), line-height: rem-calc(36)),
+  "display-3xl": (font-size: rem-calc(60), line-height: rem-calc(72)),
+  "display-2xl": (font-size: rem-calc(48), line-height: rem-calc(60)),
+  "display-xl": (font-size: rem-calc(40), line-height: rem-calc(48), letter-spacing: -0.02em),
+  "display-lg": (font-size: rem-calc(36), line-height: rem-calc(44), letter-spacing: -0.02em),
+  "display-md": (font-size: rem-calc(32), line-height: rem-calc(40)),
+  "display-sm": (font-size: rem-calc(28), line-height: rem-calc(38)),
+  "display-xs": (font-size: rem-calc(24), line-height: rem-calc(36)),
+  "text-xl": (font-size: rem-calc(20), line-height: rem-calc(34)),
+  "text-lg": (font-size: rem-calc(18), line-height: rem-calc(32)),
+  "text-md": (font-size: rem-calc(16), line-height: rem-calc(30)),
+  "text-sm": (font-size: rem-calc(14), line-height: rem-calc(24)),
+  "text-xs": (font-size: rem-calc(12), line-height: rem-calc(16)),
 );
 
 $weights: (
-    'regular': 400,
-    'medium': 500,
-    'semibold': 600,
-    'bold': 700,
-    'extrabold': 800,
+  'regular': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'extrabold': 800,
 );
 
 @mixin typography($size, $weight, $font-family: $font-family-base) {

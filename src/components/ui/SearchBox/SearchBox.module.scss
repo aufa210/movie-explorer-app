@@ -1,0 +1,104 @@
+.searchBar {
+  display: flex;
+  width: rem-calc(243);
+  height: rem-calc(44);
+  border-radius: get-radius('radius-xl');
+  border: 1px solid get-color('neutral', 800);
+  padding: rem-calc(8) rem-calc(16);
+  background-color: #1e1e1e;
+  transition: all 0.3s ease;
+  align-items: center;
+
+  @include md {
+    width: rem-calc(243);
+    height: rem-calc(56);
+    border-radius: get-radius('radius-2xl');
+  }
+  
+  .searchInputContainer {
+    display: flex;
+    position: relative;
+    gap: rem-calc(4);
+    align-items: center;
+    
+    @include md {
+      align-items: center;
+      gap: rem-calc(8);
+    }
+  
+    .searchIconWrapper {
+      display: flex;
+
+      .searchIcon {
+        width: rem-calc(20);
+        height: rem-calc(20);
+
+        @include md {
+        width: rem-calc(24);
+        height: rem-calc(24);
+        }
+      }
+    }
+  
+    .searchInput {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: get-color('neutral', 25);
+      @include typography('text-sm', 'regular');
+      width: 100%;
+
+      @include md {
+        @include typography('text-md', 'regular');
+      }
+      
+      &::placeholder {
+        color: get-color('neutral', 500);
+        @include typography('text-sm', 'regular');
+
+        @include md {
+          @include typography('text-md', 'regular');
+        }
+      }
+    }
+  
+    .clearButtonWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      width: rem-calc(28);
+      height: rem-calc(28);
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+
+      @include md {
+        width: rem-calc(32);
+        height: rem-calc(32);
+      }
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);;
+      }
+      
+      .clearIcon {
+        width: rem-calc(16);
+        height: rem-calc(16);
+
+        @include md {
+          width: rem-calc(20);
+          height: rem-calc(20);
+        }
+      }
+    }
+  }
+}
+
+.focused {
+  background-color: #2d2d2d;
+  border-color: #6a37bb;
+  box-shadow: 0 0 0 2px rgba(#6a37bb, 0.3);
+}

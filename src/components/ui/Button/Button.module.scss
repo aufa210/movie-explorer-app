@@ -1,0 +1,32 @@
+.button {
+    width: 100%;
+    height: rem-calc(44);
+    border-radius: get-radius('radius-full');
+    @include typography('text-sm', 'semibold');
+    color: get-color('neutral', 25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: rem-calc(8);
+    cursor: pointer;
+    transition: 0.3s;
+
+    @include md {
+        height: rem-calc(52);
+        @include typography('text-md', 'semibold');
+    }
+}
+
+.primary {
+    background-color: #961200;
+}
+
+.secondary {
+    background-color: #0A0D1299;
+    // border: ;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+}
