@@ -22,7 +22,7 @@
         @include md {
             width: rem-calc(216);
             height: rem-calc(321);
-            border-radius: ('radius-xl');
+            border-radius: get-radius('radius-xl');
         }
     
         .image {

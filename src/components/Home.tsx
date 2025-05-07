@@ -5,14 +5,15 @@ import SearchBox from './ui/SearchBox/SearchBox';
 import Button from './ui/Button/Button';
 import CastCard from './ui/CastCard/CastCard';
 import MovieCard from './ui/MovieCard/MovieCard';
+import FavoriteList from './ui/FavoriteList/FavoriteList';
 
 export const Home: React.FC = () => {
   return (
     <div>
       {/* <SearchBox /> */}
-      {/* <Button>Watch Trailer</Button> */}
       {/* <CastCard /> */}
-      <MovieCard />
+      {/* <MovieCard /> */}
+      <FavoriteList />
     </div>
   );
 };

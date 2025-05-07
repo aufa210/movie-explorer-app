@@ -1,32 +1,53 @@
 .button {
-    width: 100%;
-    height: rem-calc(44);
-    border-radius: get-radius('radius-full');
-    @include typography('text-sm', 'semibold');
-    color: get-color('neutral', 25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: rem-calc(8);
-    cursor: pointer;
-    transition: 0.3s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: rem-calc(44);
+  padding-inline: rem-calc(16);
+  padding-block: rem-calc(8);
+  gap: rem-calc(8);
+  border-radius: get-radius('radius-full');
+  cursor: pointer;
+  transition: 0.3s ease;
+  @include typography('text-sm', 'semibold');
+  color: get-color('neutral', 25);
+  text-align: center;
 
-    @include md {
-        height: rem-calc(52);
-        @include typography('text-md', 'semibold');
-    }
+  @include md {
+    height: rem-calc(52);
+    @include typography('text-md', 'semibold');
+  }
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.fullWidth {
+  width: 100%;
 }
 
 .primary {
-    background-color: #961200;
+  background-color: #961200;
 }
 
 .secondary {
-    background-color: #0A0D1299;
-    // border: ;
+  background-color: #0A0D1299;
 }
 
 .icon {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: rem-calc(18);
+  height: rem-calc(18);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 }

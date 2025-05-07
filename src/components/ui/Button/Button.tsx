@@ -1,13 +1,14 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from './Button.module.scss';
-import PlayButton from '@/assets/Play.svg';
 
 type ButtonProps = {
   children: React.ReactNode;
   variant?: 'primary' | 'secondary';
   className?: string;
   icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
+  fullWidth?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,16 +16,27 @@ const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   className,
   icon,
+  iconPosition = 'right',
+  fullWidth = false,
   ...rest
-}: ButtonProps) => {
+}) => {
   return (
     <button
-      className={clsx(styles.button, styles[variant], className)}
+      className={clsx(
+        styles.button,
+        styles[variant],
+        fullWidth && styles.fullWidth,
+        className
+      )}
       {...rest}
     >
+      {icon && iconPosition === 'left' && (
+        <span className={styles.icon}>{icon}</span>
+      )}
       {children}
-      {icon && <span className={styles.icon}>{icon}</span>}
-      <PlayButton />
+      {icon && iconPosition === 'right' && (
+        <span className={styles.icon}>{icon}</span>
+      )}
     </button>
   );
 };
