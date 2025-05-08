@@ -1,28 +1,32 @@
 .searchBar {
   display: flex;
+  align-items: center;
+  justify-content: center;
   width: rem-calc(243);
   height: rem-calc(44);
+  padding: rem-calc(8) rem-calc(16);
+  gap: rem-calc(4);
   border-radius: get-radius('radius-xl');
   border: 1px solid get-color('neutral', 800);
-  padding: rem-calc(8) rem-calc(16);
-  background-color: #1e1e1e;
+  background-color: #0A0D1299;
   transition: all 0.3s ease;
-  align-items: center;
-
+  
   @include md {
     width: rem-calc(243);
     height: rem-calc(56);
     border-radius: get-radius('radius-2xl');
+    gap: rem-calc(8);
+    border: none;
   }
   
   .searchInputContainer {
     display: flex;
-    position: relative;
-    gap: rem-calc(4);
     align-items: center;
+    justify-content: center;
+    gap: rem-calc(4);
+    position: relative;
     
     @include md {
-      align-items: center;
       gap: rem-calc(8);
     }
   
@@ -99,6 +103,6 @@
 
 .focused {
   background-color: #2d2d2d;
-  border-color: #6a37bb;
-  box-shadow: 0 0 0 2px rgba(#6a37bb, 0.3);
+  border-color: #E41D02;
+  box-shadow: 0 0 0 2px rgba(#E41D02, 0.3);
 }

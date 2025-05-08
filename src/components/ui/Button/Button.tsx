@@ -17,7 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   className,
   icon,
   iconPosition = 'right',
-  fullWidth = false,
+  fullWidth = true,
   ...rest
 }) => {
   return (

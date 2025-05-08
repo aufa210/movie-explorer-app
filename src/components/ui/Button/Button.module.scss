@@ -1,22 +1,26 @@
 .button {
-  display: inline-flex;
-  justify-content: center;
+  // Layout
+  display: flex;
   align-items: center;
+  justify-content: center;
+
+  // Sizing
   height: rem-calc(44);
-  padding-inline: rem-calc(16);
   padding-block: rem-calc(8);
+  padding-inline: rem-calc(16);
   gap: rem-calc(8);
+
+  // Visuals
   border-radius: get-radius('radius-full');
-  cursor: pointer;
-  transition: 0.3s ease;
-  @include typography('text-sm', 'semibold');
   color: get-color('neutral', 25);
   text-align: center;
 
-  @include md {
-    height: rem-calc(52);
-    @include typography('text-md', 'semibold');
-  }
+  // Typography
+  @include typography('text-sm', 'semibold');
+
+  // Interaction
+  cursor: pointer;
+  transition: filter 0.3s ease, transform 0.1s ease;
 
   &:hover {
     filter: brightness(1.1);
@@ -24,6 +28,12 @@
 
   &:active {
     transform: scale(0.97);
+  }
+
+  // Breakpoint md
+  @include md {
+    height: rem-calc(52);
+    @include typography('text-md', 'semibold');
   }
 }
 
@@ -37,8 +47,11 @@
 
 .secondary {
   background-color: #0A0D1299;
+  border: 1px solid get-color('neutral', 800);
 }
 
+// Icon (_icon.scss)
+// Optional: use this mixin or separate file
 .icon {
   display: flex;
   align-items: center;
@@ -51,3 +64,4 @@
     height: 100%;
   }
 }
+

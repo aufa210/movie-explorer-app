@@ -29,18 +29,24 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
           <img src={image} alt={`${title} Poster`} className={styles.image} />
         </div>
         <div className={styles.text}>
-          <div className={styles.title}>{title}</div>
-          <div className={styles.rating}>
-            <StarIcon className={styles.starIcon} />
-            <span>{rating.toFixed(1)}/10</span>
+          <div className={styles.textWrapper}>
+            <div className={styles.title}>{title}</div>
+            <div className={styles.rating}>
+              <StarIcon className={styles.starIcon} />
+              <span>{rating.toFixed(1)}/10</span>
+            </div>
+            <div className={styles.description}>{description}</div>
           </div>
-          <div className={styles.description}>{description}</div>
+          <Button className={styles.secondWatchTrailerButton}>
+            Watch Trailer <PlayIcon className={styles.playIcon} />
+          </Button>
         </div>
       </div>
 
       <div className={styles.actions}>
-        <Button>
-          Watch Trailer <PlayIcon className={styles.playIcon} />
+        <Button className={styles.watchTrailerButton}>
+          Watch Trailer
+          <PlayIcon className={styles.playIcon} />
         </Button>
         <div className={styles.favoriteButtonWrapper}>
           <Button
@@ -55,6 +61,17 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
             <HeartIcon className={styles.heartIcon} filled={isFavorite} />
           </Button>
         </div>
+      </div>
+      <div className={styles.topRightButton}>
+        <Button
+          variant='secondary'
+          aria-pressed={isFavorite}
+          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          className={clsx(styles.favoriteButton, isFavorite && styles.active)}
+          onClick={() => setIsFavorite(!isFavorite)}
+        >
+          <HeartIcon className={styles.heartIcon} filled={isFavorite} />
+        </Button>
       </div>
     </div>
   );

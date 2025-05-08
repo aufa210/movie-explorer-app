@@ -1,0 +1,171 @@
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: rem-calc(64);
+  padding: 0 rem-calc(16);
+  background-color: transparent;
+  transition: background-color 0.3s, backdrop-filter 0.3s, padding 0.3s, box-shadow 0.3s;
+
+  @include md {
+    height: rem-calc(90);
+    padding: rem-calc(80) rem-calc(140);
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    gap: rem-calc(4);
+
+    .logo {
+      width: rem-calc(92);
+      height: rem-calc(28);
+      @include md {
+        width: rem-calc(128.11);
+        height: rem-calc(40);
+      }
+    }
+
+    .navDesktop {
+      display: none;
+      gap: rem-calc(48);
+
+      .home, .favorites {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: rem-calc(46);
+        padding: rem-calc(8);
+        @include typography('text-md', 'regular');
+        color: get-color('neutral', 25);
+        transition: background-color 0.2s;
+        &:hover { background-color: get-color('neutral', 700); }
+      }
+      .home { width: rem-calc(64); }
+      .favorites { width: rem-calc(89); }
+    }
+
+    @include md {
+      gap: rem-calc(80);
+      .navDesktop { display: flex; }
+    }
+  }
+
+  .searchDesktop {
+    display: none;
+    @include md { display: block; }
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: rem-calc(24);
+
+    .iconButton {
+      background: none;
+      border: none;
+      padding: 0;
+      // 3 properti diatas properti wajib reset button
+      cursor: pointer;
+
+      width: rem-calc(24);
+      height: rem-calc(24);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    @include md { display: none; }
+  }
+
+  &.scrolled {
+    background-color: rgba(10,13,18,0.8);
+    backdrop-filter: blur(10px);
+    padding: 0 rem-calc(16);
+    box-shadow: 0 rem-calc(2) rem-calc(8) rgba(0,0,0,0.3);
+    @include md {
+      padding: rem-calc(40) rem-calc(35) rem-calc(40) rem-calc(16);
+    }
+  }
+}
+
+/* MOBILE OVERLAY */
+.mobileOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  padding: 0 rem-calc(16);
+  gap: rem-calc(24);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 101;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .overlayHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: rem-calc(64);
+
+    .overlayLogo {
+      width: rem-calc(92);
+      height: rem-calc(28);
+    }
+
+    .closeButton {
+      background: none;
+      border: none;
+      padding: 0;
+      // 3 properti diatas properti wajib reset button
+      cursor: pointer;
+
+      width: rem-calc(24);
+      height: rem-calc(24);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .navMobile {
+    display: flex;
+    flex-direction: column;
+    gap: get-spacing('spacing-xl');
+    height: rem-calc(108);
+
+    a {
+      padding: get-spacing('spacing-md');
+      gap: get-spacing('spacing-md');
+      @include typography('text-md', 'regular');
+      color: get-color('neutral', 25);
+      text-decoration: none;
+      &:hover {
+        color: get-color('primary', 300);
+      }
+    }
+  }
+}
