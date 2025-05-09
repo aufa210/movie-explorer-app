@@ -28,15 +28,14 @@
   &.fullWidth {
     width: 100%;
     max-width: none;
-    display: flex;
-    justify-content: flex-start;
   }
 
   .searchInputContainer {
     display: flex;
     align-items: center;
-    gap: rem-calc(4);
     position: relative;
+    gap: rem-calc(4);
+    width: 100%;
 
     @include md {
       gap: rem-calc(8);
@@ -87,14 +86,12 @@
       background: transparent;
       border: none;
       cursor: pointer;
-      width: rem-calc(28);
-      height: rem-calc(28);
-      border-radius: 50%;
-      transition: background-color 0.2s ease;
-
+      
       @include md {
         width: rem-calc(32);
         height: rem-calc(32);
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
       }
 
       &:hover {

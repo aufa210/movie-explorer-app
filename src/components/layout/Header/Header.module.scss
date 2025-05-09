@@ -12,18 +12,13 @@
 
   @include md {
     height: rem-calc(90);
-    padding: rem-calc(80) rem-calc(140);
+    padding: 0 rem-calc(140);
   }
-
+  
   &.scrolled {
     background-color: rgba(10, 13, 18, 0.8);
     backdrop-filter: blur(10px);
-    padding: 0 rem-calc(16);
     box-shadow: 0 rem-calc(2) rem-calc(8) rgba(0, 0, 0, 0.3);
-
-    @include md {
-      padding: rem-calc(40) rem-calc(35) rem-calc(40) rem-calc(16);
-    }
   }
 
   .left {

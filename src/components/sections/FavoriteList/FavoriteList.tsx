@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import styles from './FavoriteList.module.scss';
-import Button from '../Button/Button';
-import HeartIcon from '../HeartIcon/HeartIcon';
+import { Button } from '@/components/ui/Button';
+import HeartIcon from '../../ui/HeartIcon/HeartIcon';
 import CaptainAmericaPoster from '@/assets/Captain America: Brave New World.png';
 import StarIcon from '@/assets/Star.svg';
 import PlayIcon from '@/assets/Play.svg';

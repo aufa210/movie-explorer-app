@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './Header.module.scss';
-import SearchBox from '../SearchBox/SearchBox';
+import SearchBox from '../../ui/SearchBox/SearchBox';
 import MovieIcon from '@/assets/MovieLogo.svg';
 import SearchIcon from '@/assets/SearchWhite.svg';
 import MenuIcon from '@/assets/HamburgerMenu.svg';
 import CloseIcon from '@/assets/Close.svg';
 import LeftArrowIcon from '@/assets/LeftArrow.svg';
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -101,5 +101,3 @@ const Header: React.FC = () => {
     </>
   );
 };
-
-export default Header;
