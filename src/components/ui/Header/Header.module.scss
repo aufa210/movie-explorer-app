@@ -15,6 +15,17 @@
     padding: rem-calc(80) rem-calc(140);
   }
 
+  &.scrolled {
+    background-color: rgba(10, 13, 18, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 0 rem-calc(16);
+    box-shadow: 0 rem-calc(2) rem-calc(8) rgba(0, 0, 0, 0.3);
+
+    @include md {
+      padding: rem-calc(40) rem-calc(35) rem-calc(40) rem-calc(16);
+    }
+  }
+
   .left {
     display: flex;
     align-items: center;
@@ -23,6 +34,7 @@
     .logo {
       width: rem-calc(92);
       height: rem-calc(28);
+
       @include md {
         width: rem-calc(128.11);
         height: rem-calc(40);
@@ -33,7 +45,9 @@
       display: none;
       gap: rem-calc(48);
 
-      .home, .favorites {
+      .home,
+      .favorites {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -41,22 +55,49 @@
         padding: rem-calc(8);
         @include typography('text-md', 'regular');
         color: get-color('neutral', 25);
-        transition: background-color 0.2s;
-        &:hover { background-color: get-color('neutral', 700); }
+        transition: color 0.3s;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: rem-calc(2);
+          background: #E41D02;
+          transition: width 0.3s ease;
+        }
+
+        &:hover::after {
+          width: 100%;
+        }
       }
-      .home { width: rem-calc(64); }
-      .favorites { width: rem-calc(89); }
+
+      .home {
+        width: rem-calc(64);
+      }
+
+      .favorites {
+        width: rem-calc(89);
+      }
     }
 
     @include md {
       gap: rem-calc(80);
-      .navDesktop { display: flex; }
+
+      .navDesktop {
+        display: flex;
+      }
     }
   }
 
   .searchDesktop {
     display: none;
-    @include md { display: block; }
+
+    @include md {
+      display: block;
+    }
   }
 
   .right {
@@ -68,12 +109,9 @@
       background: none;
       border: none;
       padding: 0;
-      // 3 properti diatas properti wajib reset button
       cursor: pointer;
-
       width: rem-calc(24);
       height: rem-calc(24);
-
       display: flex;
       align-items: center;
       justify-content: center;
@@ -84,21 +122,12 @@
       }
     }
 
-    @include md { display: none; }
-  }
-
-  &.scrolled {
-    background-color: rgba(10,13,18,0.8);
-    backdrop-filter: blur(10px);
-    padding: 0 rem-calc(16);
-    box-shadow: 0 rem-calc(2) rem-calc(8) rgba(0,0,0,0.3);
     @include md {
-      padding: rem-calc(40) rem-calc(35) rem-calc(40) rem-calc(16);
+      display: none;
     }
   }
 }
 
-/* MOBILE OVERLAY */
 .mobileOverlay {
   position: fixed;
   top: 0; left: 0;
@@ -134,12 +163,9 @@
       background: none;
       border: none;
       padding: 0;
-      // 3 properti diatas properti wajib reset button
       cursor: pointer;
-
       width: rem-calc(24);
       height: rem-calc(24);
-
       display: flex;
       align-items: center;
       justify-content: center;
@@ -163,6 +189,8 @@
       @include typography('text-md', 'regular');
       color: get-color('neutral', 25);
       text-decoration: none;
+      transition: color 0.3s;
+
       &:hover {
         color: get-color('primary', 300);
       }

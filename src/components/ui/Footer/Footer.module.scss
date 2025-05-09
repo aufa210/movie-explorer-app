@@ -1,0 +1,40 @@
+.footer {
+    background-color: #000;
+    height: rem-calc(120);
+    gap: get-spacing('spacing-md');
+    border-top: 1px solid get-color('neutral', 800);
+    padding: get-spacing('spacing-3xl') get-spacing('spacing-xl');
+    margin-top: rem-calc(50);
+    
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: rem-calc(8);
+        
+        @include md {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: get-spacing('spacing-md') get-spacing('spacing-11xl');
+        }
+
+        .movieLogo {
+            width: rem-calc(92);
+            height: rem-calc(28);
+
+            @include md {
+                width: rem-calc(129.11);
+                height: rem-calc(40);
+            }
+        }
+    
+        .copy {
+            @include typography('text-xs', 'regular');
+            color: get-color('neutral', 600);
+
+            @include md {
+                @include typography('text-md', 'regular');
+            }
+        }
+    }
+}
