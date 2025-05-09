@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import clsx from 'clsx';
 import styles from './SearchBox.module.scss';
 import SearchIcon from '@/assets/Search.svg';
 import ClearIcon from '@/assets/CloseRound.svg';
@@ -6,50 +7,45 @@ import ClearIcon from '@/assets/CloseRound.svg';
 interface SearchBarProps {
   placeholder?: string;
   onSearch?: (query: string) => void;
+  fullWidth?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = 'Search Movie',
   onSearch,
+  fullWidth = false,
 }) => {
   const [query, setQuery] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-
-    if (onSearch) {
-      onSearch(value);
-    }
+    if (onSearch) onSearch(value);
   };
 
-  // Handle clear button click
   const handleClear = () => {
     setQuery('');
-    if (onSearch) {
-      onSearch('');
-    }
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (onSearch) onSearch('');
+    inputRef.current?.focus();
   };
 
-  // Handle focus events
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
-  // Handle keyboard events (e.g., Escape key to clear)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
-      handleClear();
-    }
+    if (e.key === 'Escape') handleClear();
   };
 
   return (
-    <div className={`${styles.searchBar} ${isFocused ? styles.focused : ''}`}>
+    <div
+      className={clsx(
+        styles.searchBar,
+        isFocused && styles.focused,
+        fullWidth && styles.fullWidth
+      )}
+    >
       <div className={styles.searchInputContainer}>
         <span className={styles.searchIconWrapper}>
           <SearchIcon className={styles.searchIcon} />

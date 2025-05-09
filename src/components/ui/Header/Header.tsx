@@ -6,27 +6,28 @@ import MovieIcon from '@/assets/MovieLogo.svg';
 import SearchIcon from '@/assets/SearchWhite.svg';
 import MenuIcon from '@/assets/HamburgerMenu.svg';
 import CloseIcon from '@/assets/Close.svg';
+import LeftArrowIcon from '@/assets/LeftArrow.svg';
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Lock body scroll pas overlay kebuka
+  // Lock body scroll when any overlay is open
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : 'auto';
-  }, [menuOpen]);
+    document.body.style.overflow = menuOpen || searchOpen ? 'hidden' : 'auto';
+  }, [menuOpen, searchOpen]);
 
   // Glass effect on scroll
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 0);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
     <>
       <header className={clsx(styles.header, scrolled && styles.scrolled)}>
-        {/* LEFT: logo + desktop nav */}
         <div className={styles.left}>
           <MovieIcon className={styles.logo} />
           <nav className={styles.navDesktop}>
@@ -39,36 +40,52 @@ const Header: React.FC = () => {
           </nav>
         </div>
 
-        {/* MID (desktop): search */}
         <div className={styles.searchDesktop}>
           <SearchBox placeholder='Search Movie' />
         </div>
 
-        {/* RIGHT (mobile): icons */}
         <div className={styles.right}>
-          <button className={styles.iconButton} aria-label='Search'>
+          <button
+            className={styles.iconButton}
+            aria-label='Open search'
+            onClick={() => setSearchOpen(true)}
+          >
             <SearchIcon />
           </button>
           <button
             className={styles.iconButton}
-            onClick={() => setMenuOpen((o) => !o)}
             aria-label='Toggle menu'
+            onClick={() => setMenuOpen((o) => !o)}
           >
             <MenuIcon />
           </button>
         </div>
       </header>
 
-      {/* MOBILE OVERLAY */}
+      {/* MOBILE SEARCH OVERLAY */}
+      <div className={clsx(styles.searchOverlay, searchOpen && styles.open)}>
+        <div className={styles.searchHeader}>
+          <button
+            className={styles.backButton}
+            aria-label='Back'
+            onClick={() => setSearchOpen(false)}
+          >
+            <LeftArrowIcon />
+          </button>
+          <SearchBox placeholder='Search Movie' fullWidth />
+        </div>
+      </div>
+
+      {/* MOBILE MENU OVERLAY */}
       <div className={clsx(styles.mobileOverlay, menuOpen && styles.open)}>
         <div className={styles.overlayHeader}>
           <MovieIcon className={styles.overlayLogo} />
           <button
             className={styles.closeButton}
-            onClick={() => setMenuOpen(false)}
             aria-label='Close menu'
+            onClick={() => setMenuOpen(false)}
           >
-            <CloseIcon className={styles.closeIcon} />
+            <CloseIcon />
           </button>
         </div>
 

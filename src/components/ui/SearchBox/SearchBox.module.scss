@@ -10,7 +10,7 @@
   border: 1px solid get-color('neutral', 800);
   background-color: #0A0D1299;
   transition: all 0.3s ease;
-  
+
   @include md {
     width: rem-calc(243);
     height: rem-calc(56);
@@ -18,18 +18,30 @@
     gap: rem-calc(8);
     border: none;
   }
-  
+
+  &.focused {
+    background-color: #2d2d2d;
+    border-color: #E41D02;
+    box-shadow: 0 0 0 2px rgba(#E41D02, 0.3);
+  }
+
+  &.fullWidth {
+    width: 100%;
+    max-width: none;
+    display: flex;
+    justify-content: flex-start;
+  }
+
   .searchInputContainer {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: rem-calc(4);
     position: relative;
-    
+
     @include md {
       gap: rem-calc(8);
     }
-  
+
     .searchIconWrapper {
       display: flex;
 
@@ -38,25 +50,26 @@
         height: rem-calc(20);
 
         @include md {
-        width: rem-calc(24);
-        height: rem-calc(24);
+          width: rem-calc(24);
+          height: rem-calc(24);
         }
       }
     }
-  
+
     .searchInput {
-      flex: 1;
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
       background: transparent;
       border: none;
       outline: none;
       color: get-color('neutral', 25);
       @include typography('text-sm', 'regular');
-      width: 100%;
 
       @include md {
         @include typography('text-md', 'regular');
       }
-      
+
       &::placeholder {
         color: get-color('neutral', 500);
         @include typography('text-sm', 'regular');
@@ -66,7 +79,7 @@
         }
       }
     }
-  
+
     .clearButtonWrapper {
       display: flex;
       align-items: center;
@@ -83,11 +96,11 @@
         width: rem-calc(32);
         height: rem-calc(32);
       }
-      
+
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);;
+        background-color: rgba(255, 255, 255, 0.1);
       }
-      
+
       .clearIcon {
         width: rem-calc(16);
         height: rem-calc(16);
@@ -99,10 +112,4 @@
       }
     }
   }
-}
-
-.focused {
-  background-color: #2d2d2d;
-  border-color: #E41D02;
-  box-shadow: 0 0 0 2px rgba(#E41D02, 0.3);
 }

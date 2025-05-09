@@ -15,7 +15,9 @@ export const Home: React.FC = () => {
       {/* <SearchBox /> */}
       {/* <CastCard /> */}
       {/* <MovieCard /> */}
-      {/* <FavoriteList /> */}
+      <FavoriteList />
+      <FavoriteList />
+      <FavoriteList />
       <Header />
     </div>
   );
