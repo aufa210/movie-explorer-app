@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Hero.module.scss';
+import iconStyles from '@/components/ui/Button/Button.module.scss';
 import { Button } from '@/components/ui/Button';
 import PlayIcon from '@/assets/Play.svg';
 
@@ -29,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({ backdropUrl, title, overview }) => {
         {/* Actions Block */}
         <div className={styles.actionsBlock}>
           <Button variant='primary'>
-            Watch Trailer <PlayIcon className={styles.playIcon} />
+            Watch Trailer <PlayIcon className={iconStyles.icon} />
           </Button>
           <Button variant='secondary'>See Detail</Button>
         </div>

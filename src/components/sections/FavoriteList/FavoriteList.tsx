@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import styles from './FavoriteList.module.scss';
+import iconStyles from '@/components/ui/Button/Button.module.scss';
 import { Button } from '@/components/ui/Button';
 import HeartIcon from '../../ui/HeartIcon/HeartIcon';
 import CaptainAmericaPoster from '@/assets/Captain America: Brave New World.png';
@@ -38,7 +39,7 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
             <div className={styles.description}>{description}</div>
           </div>
           <Button className={styles.secondWatchTrailerButton}>
-            Watch Trailer <PlayIcon className={styles.playIcon} />
+            Watch Trailer <PlayIcon className={iconStyles.icon} />
           </Button>
         </div>
       </div>
@@ -46,7 +47,7 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
       <div className={styles.actions}>
         <Button className={styles.watchTrailerButton}>
           Watch Trailer
-          <PlayIcon className={styles.playIcon} />
+          <PlayIcon className={iconStyles.icon} />
         </Button>
         <div className={styles.favoriteButtonWrapper}>
           <Button

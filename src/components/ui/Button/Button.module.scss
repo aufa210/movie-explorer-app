@@ -30,6 +30,16 @@
     transform: scale(0.97);
   }
 
+  .icon {
+    width: rem-calc(18);
+    height: rem-calc(18);
+
+    @include md {
+      width: rem-calc(24);
+      height: rem-calc(24);
+    }
+  }
+
   // Breakpoint md
   @include md {
     height: rem-calc(52);

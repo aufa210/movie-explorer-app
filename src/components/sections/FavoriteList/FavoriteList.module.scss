@@ -108,12 +108,12 @@
           width: rem-calc(200);
         }
 
-        .playIcon {
-          @include md {
-            width: rem-calc(24);
-            height: rem-calc(24);
-          }
-        }
+        // .playIcon {
+        //   @include md {
+        //     width: rem-calc(24);
+        //     height: rem-calc(24);
+        //   }
+        // }
       }
     }
   }
@@ -129,10 +129,10 @@
     .watchTrailerButton {
       flex: 1;
 
-      .playIcon {
-        width: rem-calc(18);
-        height: rem-calc(18);
-      }
+      // .playIcon {
+      //   width: rem-calc(18);
+      //   height: rem-calc(18);
+      // }
     }
 
     .favoriteButtonWrapper {
