@@ -79,6 +79,16 @@
         flex-direction: row;
         width: rem-calc(476);
       }
+
+      .playIcon {
+        width: rem-calc(18);
+        height: rem-calc(18);
+
+        @include md {
+          width: rem-calc(24);
+          height: rem-calc(24);
+        }
+      }
     }
   }
 }

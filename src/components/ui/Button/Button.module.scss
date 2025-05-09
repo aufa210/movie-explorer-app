@@ -49,19 +49,3 @@
   background-color: #0A0D1299;
   border: 1px solid get-color('neutral', 800);
 }
-
-// Icon (_icon.scss)
-// Optional: use this mixin or separate file
-.icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: rem-calc(18);
-  height: rem-calc(18);
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-}
-

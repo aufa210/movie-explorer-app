@@ -29,7 +29,7 @@ export const Hero: React.FC<HeroProps> = ({ backdropUrl, title, overview }) => {
         {/* Actions Block */}
         <div className={styles.actionsBlock}>
           <Button variant='primary'>
-            Watch Trailer <PlayIcon />
+            Watch Trailer <PlayIcon className={styles.playIcon} />
           </Button>
           <Button variant='secondary'>See Detail</Button>
         </div>
