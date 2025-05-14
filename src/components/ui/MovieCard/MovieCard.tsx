@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './MovieCard.module.scss';
-import MufasaPoster from '@/assets/Mufasa.png';
+// import MufasaPoster from '@/assets/Mufasa.png';
 import StarIcon from '@/assets/Star.svg';
 
 interface MovieCardProps {
@@ -11,29 +11,29 @@ interface MovieCardProps {
   index?: number;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({
+export const MovieCard: React.FC<MovieCardProps> = ({
   image,
-  title = 'Mufasa',
-  rating = 7.1,
-  isTrending = true, // default false
-  index = 0, // default jangan diisi
+  title,
+  rating,
+  isTrending = false, // default false
+  index, // default jangan diisi
 }: MovieCardProps) => {
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
-        <img src={MufasaPoster} alt={title} className={styles.image} />
+        <img src={image} alt={title} className={styles.image} />
 
         {isTrending && typeof index === 'number' && (
           <div className={styles.trendingBadge}>{index + 1}</div>
         )}
       </div>
-      <p className={styles.title}>{title}</p>
-      <div className={styles.rating}>
-        <StarIcon className={styles.starIcon} />
-        <span>{rating.toFixed(1)}/10</span>
+      <div className={styles.info}>
+        <p className={styles.title}>{title}</p>
+        <div className={styles.rating}>
+          <StarIcon className={styles.starIcon} />
+          <span className={styles.number}>{rating.toFixed(1)}/10</span>
+        </div>
       </div>
     </div>
   );
 };
-
-export default MovieCard;

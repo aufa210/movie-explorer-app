@@ -1,0 +1,76 @@
+.newReleaseSection {
+  display: flex;
+  flex-direction: column;
+  gap: get-spacing('spacing-3xl');
+  padding: 0 get-spacing('spacing-xl') get-spacing('spacing-5xl') get-spacing('spacing-xl');
+
+  @include md {
+    gap: get-spacing('spacing-5xl');
+    padding: 0 get-spacing('spacing-11xl') rem-calc(90) get-spacing('spacing-11xl');
+  }
+
+  h2 {
+    @include typography('display-xs', 'bold');
+    color: get-color('neutral', 25);
+
+    @include md {
+      @include typography('display-lg', 'bold');
+    }
+  }
+}
+
+.gridWrapper {
+  position: relative;
+  display: grid;
+  gap: get-spacing('spacing-4xl') get-spacing('spacing-xl');
+
+  // pake auto-fit + minmax agar responsive 2–5 kolom
+  grid-template-columns: repeat(auto-fit, minmax(rem-calc(172.5), 1fr));
+
+  @include md {
+    gap: rem-calc(40) get-spacing('spacing-2xl');
+  }
+
+  .grow {
+  justify-self: stretch;
+  }
+
+
+  // buang aja nth-child hide karena JS yg slice
+  // gradient fade
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%; height: rem-calc(329.22);
+    background: linear-gradient(to top, #000 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+
+    @include md {
+      height: rem-calc(397);
+    }
+  }
+
+  // tombol Load More
+  .loadMoreWrapper {
+    position: absolute;
+    bottom: rem-calc(73);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    
+    @include md {
+      bottom: rem-calc(134);
+    }
+
+    .button {
+      width: rem-calc(200);
+
+      @include md {
+        width: rem-calc(230);
+      }
+    }
+  }
+}
+

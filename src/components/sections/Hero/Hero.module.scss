@@ -1,6 +1,12 @@
+// pr hero saat ini dengan tidak menggunakan absolute
 .hero {
   position: relative;
   width: 100%;
+  height: rem-calc(513);
+
+  @include md {
+    height: 100%;
+  }
 
   .imageWrapper {
     flex: 1;
