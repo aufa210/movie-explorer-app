@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { ScrollRevealItem } from '@/components/ui/ScrollRevealItem';
 import clsx from 'clsx';
 import styles from './ExploreMore.module.scss';
 import { MovieCard } from '@/components/ui/MovieCard';
@@ -71,16 +73,44 @@ export const ExploreMore: React.FC<{ movies: Movie[] }> = ({ movies }) => {
   const isAllVisible = maxVisible >= movies.length;
 
   return (
+    // <section className={styles.newReleaseSection}>
+    //   <h2>New Release</h2>
+    //   <div ref={gridRef} className={styles.gridWrapper}>
+    //     {visible.map((movie, idx) => (
+    //       <div
+    //         key={movie.id}
+    //         className={clsx(idx >= startGrowIndex && styles.grow)}
+    //       >
+    //         <MovieCard {...movie} />
+    //       </div>
+    //     ))}
+
+    //     {!isAllVisible && (
+    //       <div className={styles.loadMoreWrapper}>
+    //         <Button
+    //           className={styles.button}
+    //           variant='secondary'
+    //           onClick={handleLoadMore}
+    //         >
+    //           Load More
+    //         </Button>
+    //       </div>
+    //     )}
+    //   </div>
+    // </section>
     <section className={styles.newReleaseSection}>
       <h2>New Release</h2>
       <div ref={gridRef} className={styles.gridWrapper}>
         {visible.map((movie, idx) => (
-          <div
+          <ScrollRevealItem
             key={movie.id}
-            className={clsx(idx >= startGrowIndex && styles.grow)}
+            className={clsx(
+              idx >= startGrowIndex && styles.grow,
+              styles.cardReveal // kalau kamu mau kasih style default
+            )}
           >
             <MovieCard {...movie} />
-          </div>
+          </ScrollRevealItem>
         ))}
 
         {!isAllVisible && (
