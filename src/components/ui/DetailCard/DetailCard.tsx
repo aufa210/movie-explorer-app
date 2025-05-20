@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './DetailCard.module.scss';
 import iconStyles from '@/components/ui/Button/Button.module.scss';
 import clsx from 'clsx';
@@ -38,22 +38,13 @@ export const DetailCard: React.FC<DetailCardProps> = ({
   const [toastMessage, setToastMessage] = useState('');
 
   const toggleFavorite = () => {
-    const newFavoriteState = !isFavorite;
-    setIsFavorite(newFavoriteState);
+    const newState = !isFavorite;
+    setIsFavorite(newState);
     setToastMessage(
-      newFavoriteState ? 'Added to favorites' : 'Removed from favorites'
+      newState ? 'Success Add to Favorites' : 'Success Remove from Favorites'
     );
     setShowToast(true);
   };
-
-  useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showToast]);
 
   return (
     <div className={styles.detailContainer}>
@@ -69,7 +60,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({
         <div className={styles.top}>
           <img src={posterUrl} alt={title} className={styles.poster} />
 
-          {/* Hidden on desktop */}
+          {/* Mobile Info */}
           <div className={styles.info}>
             <h3 className={styles.title}>{title}</h3>
             <div className={styles.date}>
@@ -78,7 +69,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({
             </div>
           </div>
 
-          {/* Hidden on mobile (desktop view) */}
+          {/* Desktop Info */}
           <div className={styles.cardContent}>
             <div className={styles.info}>
               <h3 className={styles.title}>{title}</h3>
@@ -88,7 +79,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({
               </div>
             </div>
 
-            {/* CTA Buttons */}
+            {/* Desktop CTA */}
             <div className={styles.ctaButton}>
               <Button>
                 Watch Trailer <PlayIcon className={iconStyles.icon} />
@@ -97,10 +88,6 @@ export const DetailCard: React.FC<DetailCardProps> = ({
                 <Button
                   variant='secondary'
                   fullWidth={false}
-                  aria-pressed={isFavorite}
-                  aria-label={
-                    isFavorite ? 'Remove from favorites' : 'Add to favorites'
-                  }
                   className={clsx(
                     styles.favoriteButton,
                     isFavorite && styles.active
@@ -112,7 +99,6 @@ export const DetailCard: React.FC<DetailCardProps> = ({
               </div>
             </div>
 
-            {/* Meta Cards */}
             <div className={styles.metaCards}>
               <MetaCard
                 icon={<StarIcon />}
@@ -129,7 +115,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({
           </div>
         </div>
 
-        {/* CTA Button (mobile) */}
+        {/* Mobile CTA */}
         <div className={styles.ctaButton}>
           <Button>
             Watch Trailer <PlayIcon className={iconStyles.icon} />
@@ -138,10 +124,6 @@ export const DetailCard: React.FC<DetailCardProps> = ({
             <Button
               variant='secondary'
               fullWidth={false}
-              aria-pressed={isFavorite}
-              aria-label={
-                isFavorite ? 'Remove from favorites' : 'Add to favorites'
-              }
               className={clsx(
                 styles.favoriteButton,
                 isFavorite && styles.active
@@ -153,7 +135,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({
           </div>
         </div>
 
-        {/* Meta Cards (mobile) */}
+        {/* Mobile MetaCards */}
         <div className={styles.metaCards}>
           <MetaCard icon={<StarIcon />} label='Rating' value={`${rating}/10`} />
           <MetaCard icon={<VideoIcon />} label='Genre' value={genre} />
@@ -164,9 +146,13 @@ export const DetailCard: React.FC<DetailCardProps> = ({
           />
         </div>
 
-        {/* Local Toast (only for this page) */}
+        {/* Toast */}
         {showToast && (
-          <Toast message={toastMessage} onClose={() => setShowToast(false)} />
+          <Toast
+            message={toastMessage}
+            // duration={2500}
+            onClose={() => setShowToast(false)}
+          />
         )}
       </div>
 

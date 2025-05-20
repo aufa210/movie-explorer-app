@@ -1,31 +1,30 @@
-import { useState, useCallback } from 'react';
+import { create } from 'zustand';
 
-type ToastState = {
+type Toast = {
   id: number;
   message: string;
+  duration?: number;
 };
 
-export function useToast() {
-  const [toasts, setToasts] = useState<ToastState[]>([]);
+type ToastStore = {
+  toasts: Toast[];
+  showToast: (message: string, duration?: number) => void;
+  removeToast: (id: number) => void;
+};
 
-  const showToast = useCallback((message: string) => {
+export const useToastStore = create<ToastStore>((set) => ({
+  toasts: [],
+  showToast: (message, duration = 3000) => {
     const id = Date.now();
-    const newToast = { id, message };
+    const newToast = { id, message, duration };
 
-    setToasts((prev) => [...prev, newToast]);
-
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((toast) => toast.id !== id));
-    }, 3000);
-  }, []);
-
-  const removeToast = useCallback((id: number) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  }, []);
-
-  return {
-    toasts,
-    showToast,
-    removeToast,
-  };
-}
+    set((state) => ({
+      toasts: [...state.toasts, newToast],
+    }));
+  },
+  removeToast: (id) => {
+    set((state) => ({
+      toasts: state.toasts.filter((toast) => toast.id !== id),
+    }));
+  },
+}));

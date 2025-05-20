@@ -26,7 +26,7 @@
       inset: 0;
       background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
       z-index: 1;
-      
+
       @include md {
         background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
       }
@@ -84,54 +84,54 @@
           display: flex;
           @include typography('text-xl', 'bold');
         }
-        
+
         .date {
           display: flex;
           gap: get-spacing('spacing-xs');
-          
+
           .icon {
             display: flex;
             width: rem-calc(20);
             height: rem-calc(20);
           }
-          
+
           .releaseDate {
             display: flex;
             @include typography('text-sm', 'regular');
           }
         }
       }
-      
+
       .cardContent {
         display: none;
-        
+
         @include md {
           display: flex;
           flex-direction: column;
           gap: get-spacing('spacing-3xl');
           width: 100%;
-          
+
           .info {
             display: flex;
             flex-direction: column;
             gap: get-spacing('spacing-xl');
             color: get-color('neutral', 25);
-            
+
             .title {
               display: flex;
               @include typography('display-xl', 'bold');
             }
-            
+
             .date {
               display: flex;
               gap: get-spacing('spacing-md');
-              
+
               .icon {
                 display: flex;
                 width: rem-calc(24);
                 height: rem-calc(24);
               }
-              
+
               .releaseDate {
                 display: flex;
                 @include typography('text-md', 'regular');
@@ -143,18 +143,18 @@
             display: flex;
             gap: get-spacing('spacing-xl');
             width: rem-calc(288);
-            
+
             .favoriteButtonWrapper {
               button {
                 width: rem-calc(52);
                 padding: 0;
                 border: 1px solid get-color('neutral', 900);
-                
+
                 .heartIcon {
                   width: rem-calc(24);
                   height: rem-calc(24);
                 }
-                
+
                 &.active .heartIcon {
                   fill: #E41D02;
                   transform: scale(1.1);
@@ -162,7 +162,7 @@
               }
             }
           }
-          
+
           .metaCards {
             display: flex;
             gap: get-spacing('spacing-2xl');
@@ -220,8 +220,8 @@
 
     .overviewTitle {
       display: flex;
-      @include typography('text-xl', 'bold');
       color: get-color('neutral', 25);
+      @include typography('text-xl', 'bold');
 
       @include md {
         @include typography('display-md', 'bold');
@@ -230,8 +230,8 @@
 
     .overviewText {
       display: flex;
-      @include typography('text-sm', 'regular');
       color: get-color('neutral', 400);
+      @include typography('text-sm', 'regular');
 
       @include md {
         @include typography('text-md', 'regular');
@@ -243,15 +243,15 @@
     display: flex;
     flex-direction: column;
     gap: get-spacing('spacing-xl');
-    
+
     @include md {
       gap: get-spacing('spacing-3xl');
     }
 
     .castsAndCrews {
-      @include typography('text-xl', 'bold');
       color: get-color('neutral', 25);
-      
+      @include typography('text-xl', 'bold');
+
       @include md {
         @include typography('display-md', 'bold');
       }
@@ -261,11 +261,11 @@
       display: flex;
       flex-direction: column;
       gap: get-spacing('spacing-xl');
-      
+
       @include md {
-        gap: get-spacing('spacing-5xl');
         flex-direction: row;
         flex-wrap: wrap;
+        gap: get-spacing('spacing-5xl');
       }
     }
   }
