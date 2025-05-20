@@ -4,7 +4,7 @@ import ChecklistIcon from '@/assets/Checklist.svg';
 
 interface ToastProps {
   message: string;
-  duration?: number; // dalam milidetik
+  duration?: number;
   onClose: () => void;
 }
 
@@ -13,14 +13,25 @@ export const Toast: React.FC<ToastProps> = ({
   duration = 2500,
   onClose,
 }) => {
-  const [hide, setHide] = useState(false);
+  const [show, setShow] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    const hideTimer = setTimeout(() => setHide(true), duration - 500); // fade out 500ms sebelum hilang
-    const removeTimer = setTimeout(() => onClose(), duration);
+    // trigger slide-in animation after mount
+    setTimeout(() => {
+      setShow(true);
+    }, 10); // sedikit delay agar transition bisa berjalan
+
+    const fadeTimer = setTimeout(() => {
+      setFadeOut(true); // trigger fade-out
+    }, duration);
+
+    const removeTimer = setTimeout(() => {
+      onClose(); // hapus dari DOM
+    }, duration + 500);
 
     return () => {
-      clearTimeout(hideTimer);
+      clearTimeout(fadeTimer);
       clearTimeout(removeTimer);
     };
   }, [duration, onClose]);
@@ -28,7 +39,11 @@ export const Toast: React.FC<ToastProps> = ({
   return (
     <button
       onClick={onClose}
-      className={`${styles['toast-close-btn']} toast ${hide ? 'hide' : 'show'}`}
+      className={`
+        ${styles['toast-close-btn']}
+        ${show ? styles.show : ''}
+        ${fadeOut ? styles['fade-out'] : ''}
+      `}
       aria-live='assertive'
       aria-atomic='true'
     >

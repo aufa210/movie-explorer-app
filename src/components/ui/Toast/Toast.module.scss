@@ -1,70 +1,8 @@
-// .toast-close-btn {
-//   position: fixed;
-//   top: rem-calc(80);
-//   left: 50%;
-//   transform: translateX(-50%);
-//   z-index: 1000;
-//   opacity: 0;
-//   animation: fade-slide-in 0.5s ease forwards;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   width: rem-calc(341);
-//   height: rem-calc(52);
-//   border-radius: get-radius('radius-2xl');
-//   padding: 0 rem-calc(24);
-//   gap: rem-calc(12);
-//   background-color: #00000040;
-//   border: none;
-//   cursor: pointer;
-
-//   .checklistIcon {
-//     display: flex;
-//     width: rem-calc(24);
-//     height: rem-calc(24);
-//   }
-  
-//   .message {
-//     display: flex;
-//     color: get-color('neutral', 25);
-//     @include typography('text-md', 'medium');
-//   }
-// }
-
-// .toast.show {
-//   opacity: 1;
-// }
-
-// .toast.hide {
-//   animation: fade-out 0.5s ease forwards;
-// }
-
-// @keyframes fade-slide-in {
-//   from {
-//     opacity: 0;
-//     transform: translate(-50%, -20px);
-//   }
-//   to {
-//     opacity: 1;
-//     transform: translate(-50%, 0);
-//   }
-// }
-
-// @keyframes fade-out {
-//   from {
-//     opacity: 1;
-//     transform: translate(-50%, 0);
-//   }
-//   to {
-//     opacity: 0;
-//     transform: translate(-50%, -20px);
-//   }
-// }
 .toast-close-btn {
   position: fixed;
   top: rem-calc(80);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -20px); // posisi awal untuk slide-in
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -79,49 +17,25 @@
   cursor: pointer;
 
   opacity: 0;
-  animation: fade-slide-in 0.5s ease forwards;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 
-  &.toast {
-    &.show {
-      opacity: 1;
-    }
+  &.show {
+    opacity: 1;
+    transform: translate(-50%, 0); // slide in ke posisi normal
+  }
 
-    &.hide {
-      animation: fade-out 0.5s ease forwards;
-    }
+  &.fade-out {
+    opacity: 0;
+    // tetap di tempat, hanya hilang pelan
   }
 
   .checklistIcon {
-    display: flex;
     width: rem-calc(24);
     height: rem-calc(24);
   }
 
   .message {
-    display: flex;
     color: get-color('neutral', 25);
     @include typography('text-md', 'medium');
-  }
-}
-
-@keyframes fade-slide-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -20px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -20px);
   }
 }
