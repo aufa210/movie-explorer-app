@@ -1,24 +1,21 @@
 import React from 'react';
-import CaptainAmerica from '@/assets/AnthonyMackie.png';
 import styles from './CastCard.module.scss';
 
 type CastCardProps = {
+  image: string;
   name: string;
   character: string;
 };
 
-const CastCard: React.FC<CastCardProps> = ({
-  name = 'Anthony Mackie',
-  character = 'Sam Wilson / Captain America',
+export const CastCard: React.FC<CastCardProps> = ({
+  image,
+  name,
+  character,
 }: CastCardProps) => {
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
-        <img
-          src={CaptainAmerica}
-          alt='Captain America'
-          className={styles.image}
-        />
+        <img src={image} alt={`${name} Picture`} className={styles.image} />
       </div>
       <div className={styles.info}>
         <h4>{name}</h4>
@@ -27,8 +24,6 @@ const CastCard: React.FC<CastCardProps> = ({
     </div>
   );
 };
-
-export default CastCard;
 
 // Fetch Version
 // ('use client');

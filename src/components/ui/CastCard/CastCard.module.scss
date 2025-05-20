@@ -1,9 +1,7 @@
 .card {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: rem-calc(360);
-  height: rem-calc(84);
+  width: 100%;
   gap: rem-calc(12);
 
   @include md {
@@ -36,10 +34,7 @@
   .info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: rem-calc(293);
-    height: rem-calc(56);
+    width: 100%;
     gap: rem-calc(4);
   
     @include md {

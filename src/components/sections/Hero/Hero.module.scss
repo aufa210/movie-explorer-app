@@ -27,7 +27,7 @@
     }
 
     @include md {
-      // height: rem-calc(810);
+      height: rem-calc(810);
       height: 100vh;
       filter: brightness(0.74);
     }

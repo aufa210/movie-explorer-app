@@ -6,7 +6,7 @@ interface HeartIconProps {
   className?: string; // ← tambahkan
 }
 
-const HeartIcon: React.FC<HeartIconProps> = ({
+export const HeartIcon: React.FC<HeartIconProps> = ({
   filled = false,
   size = 18.86,
   className,
@@ -28,5 +28,3 @@ const HeartIcon: React.FC<HeartIconProps> = ({
     </g>
   </svg>
 );
-
-export default HeartIcon;

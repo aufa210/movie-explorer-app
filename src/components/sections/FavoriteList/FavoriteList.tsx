@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import styles from './FavoriteList.module.scss';
 import iconStyles from '@/components/ui/Button/Button.module.scss';
 import { Button } from '@/components/ui/Button';
-import HeartIcon from '../../ui/HeartIcon/HeartIcon';
+import { HeartIcon } from '@/components/ui/HeartIcon';
 import CaptainAmericaPoster from '@/assets/Captain America: Brave New World.png';
 import StarIcon from '@/assets/Star.svg';
 import PlayIcon from '@/assets/Play.svg';
@@ -15,7 +15,7 @@ interface FavoriteListProps {
   description?: string;
 }
 
-const FavoriteList: React.FC<FavoriteListProps> = ({
+export const FavoriteList: React.FC<FavoriteListProps> = ({
   image = CaptainAmericaPoster,
   title = 'Captain America: Brave New World',
   rating = 7.9,
@@ -52,6 +52,7 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
         <div className={styles.favoriteButtonWrapper}>
           <Button
             variant='secondary'
+            fullWidth={false}
             aria-pressed={isFavorite}
             aria-label={
               isFavorite ? 'Remove from favorites' : 'Add to favorites'
@@ -77,5 +78,3 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
     </div>
   );
 };
-
-export default FavoriteList;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Home.module.scss';
-import { Hero } from '@/components/sections/Hero';
 import { Header } from '@/components/layout/Header';
+import { Hero } from '@/components/sections/Hero';
 import { TrendingNow } from '@/components/sections/TrendingNow';
 import { ExploreMore } from '@/components/sections/ExploreMore';
 import { Footer } from '@/components/layout/Footer';
