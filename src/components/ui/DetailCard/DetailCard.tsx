@@ -46,6 +46,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({
         {/* Top Section */}
         <div className={styles.top}>
           <img src={posterUrl} alt={title} className={styles.poster} />
+          {/* hidden on desktop */}
           <div className={styles.info}>
             <h3 className={styles.title}>{title}</h3>
             <div className={styles.date}>
@@ -53,9 +54,56 @@ export const DetailCard: React.FC<DetailCardProps> = ({
               <span className={styles.releaseDate}>{releaseDate}</span>
             </div>
           </div>
+          {/* hidden on mobile */}
+          <div className={styles.cardContent}>
+            <div className={styles.info}>
+              <h3 className={styles.title}>{title}</h3>
+              <div className={styles.date}>
+                <CalendarIcon className={styles.icon} />
+                <span className={styles.releaseDate}>{releaseDate}</span>
+              </div>
+            </div>
+
+            <div className={styles.ctaButton}>
+              <Button>
+                Watch Trailer <PlayIcon className={iconStyles.icon} />
+              </Button>
+              <div className={styles.favoriteButtonWrapper}>
+                <Button
+                  variant='secondary'
+                  fullWidth={false}
+                  aria-pressed={isFavorite}
+                  aria-label={
+                    isFavorite ? 'Remove from favorites' : 'Add to favorites'
+                  }
+                  className={clsx(
+                    styles.favoriteButton,
+                    isFavorite && styles.active
+                  )}
+                  onClick={() => setIsFavorite(!isFavorite)}
+                >
+                  <HeartIcon className={styles.heartIcon} filled={isFavorite} />
+                </Button>
+              </div>
+            </div>
+
+            <div className={styles.metaCards}>
+              <MetaCard
+                icon={<StarIcon />}
+                label='Rating'
+                value={`${rating}/10`}
+              />
+              <MetaCard icon={<VideoIcon />} label='Genre' value={genre} />
+              <MetaCard
+                icon={<HappyEmojiIcon />}
+                label='Age Limit'
+                value={ageLimit}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* CTA Button */}
+        {/* CTA Button, Hidden on Mobile */}
         <div className={styles.ctaButton}>
           <Button>
             Watch Trailer <PlayIcon className={iconStyles.icon} />
@@ -79,7 +127,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({
           </div>
         </div>
 
-        {/* Meta Cards */}
+        {/* Meta Cards, Hidden on Mobile */}
         <div className={styles.metaCards}>
           <MetaCard icon={<StarIcon />} label='Rating' value={`${rating}/10`} />
           <MetaCard icon={<VideoIcon />} label='Genre' value={genre} />
@@ -105,31 +153,33 @@ export const DetailCard: React.FC<DetailCardProps> = ({
       {/* Cast & Crew */}
       <div className={styles.castAndCrew}>
         <h2 className={styles.castsAndCrews}>Cast & Crew</h2>
-        <CastCard
-          image={AnthonyMackie}
-          name='Anthony Mackie'
-          character='Sam Wilson / Captain America'
-        />
-        <CastCard
-          image={AnthonyMackie}
-          name='Anthony Mackie'
-          character='Sam Wilson / Captain America'
-        />
-        <CastCard
-          image={AnthonyMackie}
-          name='Anthony Mackie'
-          character='Sam Wilson / Captain America'
-        />
-        <CastCard
-          image={AnthonyMackie}
-          name='Anthony Mackie'
-          character='Sam Wilson / Captain America'
-        />
-        <CastCard
-          image={AnthonyMackie}
-          name='Anthony Mackie'
-          character='Sam Wilson / Captain America'
-        />
+        <div className={styles.casters}>
+          <CastCard
+            image={AnthonyMackie}
+            name='Anthony Mackie'
+            character='Sam Wilson / Captain America'
+          />
+          <CastCard
+            image={AnthonyMackie}
+            name='Anthony Mackie'
+            character='Sam Wilson / Captain America'
+          />
+          <CastCard
+            image={AnthonyMackie}
+            name='Anthony Mackie'
+            character='Sam Wilson / Captain America'
+          />
+          <CastCard
+            image={AnthonyMackie}
+            name='Anthony Mackie'
+            character='Sam Wilson / Captain America'
+          />
+          <CastCard
+            image={AnthonyMackie}
+            name='Anthony Mackie'
+            character='Sam Wilson / Captain America'
+          />
+        </div>
       </div>
     </div>
   );
