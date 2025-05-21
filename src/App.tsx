@@ -1,10 +1,10 @@
-// import { Home } from '@/pages/Home';
-import { Detail } from '@/pages/Detail/Detail';
+import { Home } from '@/pages/Home';
+// import { Detail } from '@/pages/Detail/Detail';
 
 function App() {
   return (
-    // <Home />
-    <Detail />
+    <Home />
+    // <Detail />
   );
 }
 

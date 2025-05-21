@@ -82,29 +82,3 @@
     height: auto;
   }
 }
-
-// .slide {
-//   flex: 0 0 rem-calc(173);
-//   max-width: rem-calc(173);
-//   scroll-snap-align: center;
-//   background-color: #000;
-
-//   @include md {
-//     transition: transform .3s ease, box-shadow .3s ease;
-
-//     &:hover {
-//       transform: translateY(-0.5rem) scale(1.03);
-//       box-shadow: 0 rem-calc(8) rem-calc(16) rgba(0, 0, 0, 0.4);
-//     }
-//   }
-
-//   @include md {
-//     flex: 0 0 rem-calc(216);
-//     max-width: rem-calc(216);
-//   }
-
-//   & > :global(.card) {
-//     width: 100%;
-//     height: auto;
-//   }
-// }

@@ -398,9 +398,9 @@ export const Home: React.FC = () => {
     <div>
       <Header />
       <Hero
-        backdropUrl={TheGorge}
+        backgroundUrl={TheGorge}
         title='The Gorge'
-        overview='Two highly trained operatives grow close from a distance after being sent to guard opposite sindexes of a mysterious gorge. When an evil below emerges, they must work together to survive what lies within.'
+        overview='Two highly trained operatives grow close from a distance after being sent to guard opposite sides of a mysterious gorge. When an evil below emerges, they must work together to survive what lies within.'
       />
       <TrendingNow movies={dummyMovies} />
       <ExploreMore movies={dummyExploreMore} />

@@ -13,6 +13,10 @@ import StarIcon from '@/assets/Star.svg';
 import VideoIcon from '@/assets/Video.svg';
 import HappyEmojiIcon from '@/assets/HappyEmoji.svg';
 import AnthonyMackie from '@/assets/AnthonyMackie.png';
+import HarrisonFord from '@/assets/HarrisonFord.png';
+import DannyRamirez from '@/assets/DannyRamirez.png';
+import ShiraHaas from '@/assets/ShiraHaas.png';
+import TimBlakeNelson from '@/assets/TimBlakeNelson.png';
 
 interface DetailCardProps {
   backgroundUrl?: string;
@@ -171,14 +175,34 @@ export const DetailCard: React.FC<DetailCardProps> = ({
       <div className={styles.castAndCrew}>
         <h2 className={styles.castsAndCrews}>Cast & Crew</h2>
         <div className={styles.casters}>
-          {[...Array(5)].map((_, i) => (
-            <CastCard
-              key={i}
-              image={AnthonyMackie}
-              name='Anthony Mackie'
-              character='Sam Wilson / Captain America'
-            />
-          ))}
+          {/* {[...Array(5)].map((_, i) => ( */}
+          {/* key={i} */}
+          <CastCard
+            image={AnthonyMackie}
+            name='Anthony Mackie'
+            character='Sam Wilson / Captain America'
+          />
+          <CastCard
+            image={HarrisonFord}
+            name='Harrison Ford'
+            character='President Thaddeus Ross'
+          />
+          <CastCard
+            image={DannyRamirez}
+            name='Danny Ramirez'
+            character='Joaquin Torres'
+          />
+          <CastCard
+            image={ShiraHaas}
+            name='Shira Haas'
+            character='Ruth Bat-Seraph'
+          />
+          <CastCard
+            image={TimBlakeNelson}
+            name='Tim Blake Nelson'
+            character='Samuel Sterns'
+          />
+          {/* ))} */}
         </div>
       </div>
     </div>
