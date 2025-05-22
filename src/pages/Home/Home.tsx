@@ -13,9 +13,11 @@ const dummyMovies = [
   {
     index: 0,
     title: 'The Gorge',
-    image: Mufasa,
+    image: TheGorge,
     rating: 7.9,
     isTrending: true,
+    overview:
+      'Two highly trained operatives grow close from a distance after being sent to guard opposite sides of a mysterious gorge. When an evil below emerges, they must work together to survive what lies within.',
   },
   {
     index: 1,
@@ -23,6 +25,7 @@ const dummyMovies = [
     image: Mufasa,
     rating: 7.5,
     isTrending: true,
+    overview: 'The origin story of Mufasa, the Lion King.',
   },
   // ... sampai 20 items kalau mau
   {
@@ -394,14 +397,18 @@ const dummyExploreMore = [
 ];
 
 export const Home: React.FC = () => {
+  const trendingHeroMovie = dummyMovies.filter((m) => m.isTrending)[0];
+
   return (
     <div>
       <Header />
-      <Hero
-        backgroundUrl={TheGorge}
-        title='The Gorge'
-        overview='Two highly trained operatives grow close from a distance after being sent to guard opposite sides of a mysterious gorge. When an evil below emerges, they must work together to survive what lies within.'
-      />
+      {trendingHeroMovie && (
+        <Hero
+          backgroundUrl={trendingHeroMovie.image}
+          title={trendingHeroMovie.title}
+          overview={trendingHeroMovie.overview}
+        />
+      )}
       <TrendingNow movies={dummyMovies} />
       <ExploreMore movies={dummyExploreMore} />
       <Footer />
