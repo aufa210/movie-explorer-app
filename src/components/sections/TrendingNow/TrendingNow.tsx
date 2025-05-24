@@ -4,25 +4,45 @@ import { CarouselArrow } from '@/components/ui/CarouselArrow';
 import { MovieCard } from '@/components/ui/MovieCard';
 import styles from './TrendingNow.module.scss';
 
+export interface Movie {
+  movieId: number | string;
+  title: string;
+  poster: string;
+  rating: number;
+  isTrending?: boolean;
+}
+
 export const TrendingNow: React.FC<{ movies: Movie[] }> = ({ movies }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [slideWidth, setSlideWidth] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // Hitung slideWidth
+  // Hitung lebar slide pertama saat mount atau saat movies berubah
   useEffect(() => {
-    const slideEl = containerRef.current?.querySelector(
-      `.${styles.slide}`
-    ) as HTMLDivElement;
-    if (slideEl) {
-      const style = getComputedStyle(slideEl);
-      const gap = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-      setSlideWidth(slideEl.offsetWidth + gap);
+    const calculateSlideWidth = () => {
+      const slideEl = containerRef.current?.querySelector(
+        `.${styles.slide}`
+      ) as HTMLDivElement;
+      if (slideEl) {
+        const style = getComputedStyle(slideEl);
+        const gap =
+          parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+        setSlideWidth(slideEl.offsetWidth + gap);
+      }
+    };
+
+    calculateSlideWidth();
+
+    // Observe jika container berubah ukurannya (responsive)
+    const observer = new ResizeObserver(calculateSlideWidth);
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
+
+    return () => observer.disconnect();
   }, [movies]);
 
-  // Update tombol & gradient
   const updateButtons = () => {
     const node = containerRef.current;
     if (!node) return;
@@ -35,6 +55,10 @@ export const TrendingNow: React.FC<{ movies: Movie[] }> = ({ movies }) => {
     updateButtons();
   }, [slideWidth]);
 
+  const handleScroll = () => {
+    requestAnimationFrame(updateButtons);
+  };
+
   const scroll = (dir: 'left' | 'right') => {
     if (!containerRef.current) return;
     containerRef.current.scrollBy({
@@ -43,14 +67,16 @@ export const TrendingNow: React.FC<{ movies: Movie[] }> = ({ movies }) => {
     });
   };
 
+  if (!movies || movies.length === 0) return null;
+
   return (
     <div className={styles.trendingSection}>
       <h2>Trending Now</h2>
       <div
         className={clsx(
           styles.carouselWrapper,
-          canScrollLeft && styles.fadeLeft, // ← tambah class
-          canScrollRight && styles.fadeRight // ← tambah class
+          canScrollLeft && styles.fadeLeft,
+          canScrollRight && styles.fadeRight
         )}
       >
         {canScrollLeft && (
@@ -60,11 +86,11 @@ export const TrendingNow: React.FC<{ movies: Movie[] }> = ({ movies }) => {
         <div
           className={styles.carousel}
           ref={containerRef}
-          onScroll={updateButtons}
+          onScroll={handleScroll}
         >
-          {movies.map((m) => (
-            <div key={m.id} className={styles.slide}>
-              <MovieCard {...m} />
+          {movies.map((m, index) => (
+            <div key={m.movieId} className={styles.slide}>
+              <MovieCard {...m} isTrending index={index} />
             </div>
           ))}
         </div>

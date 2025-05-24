@@ -1,416 +1,70 @@
-import React from 'react';
-import styles from './Home.module.scss';
+// src/pages/Home.tsx
+import React, { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Hero } from '@/components/sections/Hero';
 import { TrendingNow } from '@/components/sections/TrendingNow';
 import { ExploreMore } from '@/components/sections/ExploreMore';
 import { Footer } from '@/components/layout/Footer';
-import Mufasa from '@/assets/Mufasa.png';
-import TheGorgePoster from '@/assets/TheGorgePoster.png';
-import TheGorge from '@/assets/TheGorge.png';
-
-const dummyMovies = [
-  {
-    index: 0,
-    title: 'The Gorge',
-    image: TheGorge,
-    rating: 7.9,
-    isTrending: true,
-    overview:
-      'Two highly trained operatives grow close from a distance after being sent to guard opposite sides of a mysterious gorge. When an evil below emerges, they must work together to survive what lies within.',
-  },
-  {
-    index: 1,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-    overview: 'The origin story of Mufasa, the Lion King.',
-  },
-  // ... sampai 20 items kalau mau
-  {
-    index: 2,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  // ... sampai 20 items kalau mau
-  {
-    index: 3,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  // ... sampai 20 items kalau mau
-  {
-    index: 4,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 5,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 6,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 7,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 8,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 9,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 10,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 11,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 12,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  {
-    index: 13,
-    title: 'Mufasa',
-    image: Mufasa,
-    rating: 7.5,
-    isTrending: true,
-  },
-  // ... sampai 20 items kalau mau
-];
-
-const dummyExploreMore = [
-  {
-    title: ' The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-  {
-    title: 'The Gorge',
-    image: TheGorgePoster,
-    rating: 9.9,
-    isTrending: false,
-  },
-];
+import { getTrendingMovies, getPopularMovies } from '@/services/tmdb';
 
 export const Home: React.FC = () => {
-  const trendingHeroMovie = dummyMovies.filter((m) => m.isTrending)[0];
+  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
+  const [exploreMovies, setExploreMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const trendingRes = await getTrendingMovies();
+        const popularRes = await getPopularMovies();
+
+        const trending = trendingRes.results.map((m: any) => ({
+          id: m.id,
+          title: m.title,
+          poster: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          rating: m.vote_average,
+          isTrending: true,
+          heroBackground: `https://image.tmdb.org/t/p/original${m.backdrop_path}`,
+          overview: m.overview,
+          index: m.id,
+        }));
+
+        const explore = popularRes.results.map((m: any) => ({
+          id: m.id,
+          title: m.title,
+          poster: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          rating: m.vote_average,
+          isTrending: false,
+        }));
+
+        setTrendingMovies(trending);
+        setExploreMovies(explore);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
+  const trendingHeroMovie = trendingMovies[0];
 
   return (
     <div>
       <Header />
       {trendingHeroMovie && (
         <Hero
-          backgroundUrl={trendingHeroMovie.image}
+          backdropUrl={trendingHeroMovie.heroBackground}
           title={trendingHeroMovie.title}
           overview={trendingHeroMovie.overview}
+          movieId={trendingHeroMovie.id}
         />
       )}
-      <TrendingNow movies={dummyMovies} />
-      <ExploreMore movies={dummyExploreMore} />
+      <TrendingNow movies={trendingMovies} />
+      <ExploreMore movies={exploreMovies} />
       <Footer />
     </div>
   );

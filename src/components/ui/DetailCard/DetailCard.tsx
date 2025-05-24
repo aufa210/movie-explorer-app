@@ -28,6 +28,50 @@ interface DetailCardProps {
   ageLimit: number;
 }
 
+const FavoriteButton: React.FC<{
+  isFavorite: boolean;
+  onClick: () => void;
+}> = ({ isFavorite, onClick }) => (
+  <Button
+    variant='secondary'
+    fullWidth={false}
+    className={clsx(styles.favoriteButton, isFavorite && styles.active)}
+    onClick={onClick}
+  >
+    <HeartIcon className={styles.heartIcon} filled={isFavorite} />
+  </Button>
+);
+
+const CTAButtons: React.FC<{
+  isFavorite: boolean;
+  toggleFavorite: () => void;
+}> = ({ isFavorite, toggleFavorite }) => (
+  <div className={styles.ctaButton}>
+    <Button>
+      Watch Trailer <PlayIcon className={iconStyles.icon} />
+    </Button>
+    <div className={styles.favoriteButtonWrapper}>
+      <FavoriteButton isFavorite={isFavorite} onClick={toggleFavorite} />
+    </div>
+  </div>
+);
+
+const MetaCardsGroup: React.FC<{
+  rating: number;
+  genre: string;
+  ageLimit: number;
+}> = ({ rating, genre, ageLimit }) => (
+  <div className={styles.metaCards}>
+    <MetaCard icon={<StarIcon />} label='Rating' value={`${rating}/10`} />
+    <MetaCard icon={<VideoIcon />} label='Genre' value={genre} />
+    <MetaCard
+      icon={<HappyEmojiIcon />}
+      label='Age Limit'
+      value={`${ageLimit}+`}
+    />
+  </div>
+);
+
 export const DetailCard: React.FC<DetailCardProps> = ({
   backgroundUrl,
   posterUrl,
@@ -84,79 +128,25 @@ export const DetailCard: React.FC<DetailCardProps> = ({
             </div>
 
             {/* Desktop CTA */}
-            <div className={styles.ctaButton}>
-              <Button>
-                Watch Trailer <PlayIcon className={iconStyles.icon} />
-              </Button>
-              <div className={styles.favoriteButtonWrapper}>
-                <Button
-                  variant='secondary'
-                  fullWidth={false}
-                  className={clsx(
-                    styles.favoriteButton,
-                    isFavorite && styles.active
-                  )}
-                  onClick={toggleFavorite}
-                >
-                  <HeartIcon className={styles.heartIcon} filled={isFavorite} />
-                </Button>
-              </div>
-            </div>
+            <CTAButtons
+              isFavorite={isFavorite}
+              toggleFavorite={toggleFavorite}
+            />
 
-            <div className={styles.metaCards}>
-              <MetaCard
-                icon={<StarIcon />}
-                label='Rating'
-                value={`${rating}/10`}
-              />
-              <MetaCard icon={<VideoIcon />} label='Genre' value={genre} />
-              <MetaCard
-                icon={<HappyEmojiIcon />}
-                label='Age Limit'
-                value={ageLimit}
-              />
-            </div>
+            {/* Desktop MetaCards */}
+            <MetaCardsGroup rating={rating} genre={genre} ageLimit={ageLimit} />
           </div>
         </div>
 
         {/* Mobile CTA */}
-        <div className={styles.ctaButton}>
-          <Button>
-            Watch Trailer <PlayIcon className={iconStyles.icon} />
-          </Button>
-          <div className={styles.favoriteButtonWrapper}>
-            <Button
-              variant='secondary'
-              fullWidth={false}
-              className={clsx(
-                styles.favoriteButton,
-                isFavorite && styles.active
-              )}
-              onClick={toggleFavorite}
-            >
-              <HeartIcon className={styles.heartIcon} filled={isFavorite} />
-            </Button>
-          </div>
-        </div>
+        <CTAButtons isFavorite={isFavorite} toggleFavorite={toggleFavorite} />
 
         {/* Mobile MetaCards */}
-        <div className={styles.metaCards}>
-          <MetaCard icon={<StarIcon />} label='Rating' value={`${rating}/10`} />
-          <MetaCard icon={<VideoIcon />} label='Genre' value={genre} />
-          <MetaCard
-            icon={<HappyEmojiIcon />}
-            label='Age Limit'
-            value={ageLimit}
-          />
-        </div>
+        <MetaCardsGroup rating={rating} genre={genre} ageLimit={ageLimit} />
 
         {/* Toast */}
         {showToast && (
-          <Toast
-            message={toastMessage}
-            // duration={2500}
-            onClose={() => setShowToast(false)}
-          />
+          <Toast message={toastMessage} onClose={() => setShowToast(false)} />
         )}
       </div>
 
@@ -175,8 +165,6 @@ export const DetailCard: React.FC<DetailCardProps> = ({
       <div className={styles.castAndCrew}>
         <h2 className={styles.castsAndCrews}>Cast & Crew</h2>
         <div className={styles.casters}>
-          {/* {[...Array(5)].map((_, i) => ( */}
-          {/* key={i} */}
           <CastCard
             image={AnthonyMackie}
             name='Anthony Mackie'
@@ -202,7 +190,6 @@ export const DetailCard: React.FC<DetailCardProps> = ({
             name='Tim Blake Nelson'
             character='Samuel Sterns'
           />
-          {/* ))} */}
         </div>
       </div>
     </div>

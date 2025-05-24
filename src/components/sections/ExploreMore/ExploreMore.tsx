@@ -1,93 +1,86 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollRevealItem } from '@/components/ui/ScrollRevealItem';
-import clsx from 'clsx';
-import styles from './ExploreMore.module.scss';
 import { MovieCard } from '@/components/ui/MovieCard';
 import { Button } from '@/components/ui/Button';
+import clsx from 'clsx';
+import styles from './ExploreMore.module.scss';
 
-export const ExploreMore: React.FC<{ movies: Movie[] }> = ({ movies }) => {
+interface ExploreMoreProps {
+  movies: Movie[];
+}
+
+export const ExploreMore: React.FC<ExploreMoreProps> = ({ movies }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const [columns, setColumns] = useState(2);
   const [maxVisible, setMaxVisible] = useState(6);
-  const [visibleCount, setVisibleCount] = useState(6); // jumlah card per step
+  const [loadStep, setLoadStep] = useState(6);
 
   const BASE_ROWS = 4;
   const MAX_SAFE_COLS = 5;
 
-  const calculateColumnsFromGrid = () => {
+  const calculateGridLayout = () => {
     const wrapper = gridRef.current;
     if (!wrapper) return;
 
-    const children = Array.from(wrapper.children).filter(
+    const movieCards = Array.from(wrapper.children).filter(
       (el) =>
         !(el as HTMLElement).matches(
           `.${styles.grow}, .${styles.loadMoreWrapper}`
         )
     ) as HTMLElement[];
 
-    let currentTop = null;
     let cols = 0;
+    let firstRowTop: number | null = null;
 
-    for (const el of children) {
-      const top = el.offsetTop;
-      if (currentTop === null) currentTop = top;
-
-      if (top !== currentTop) break;
+    for (const card of movieCards) {
+      const top = card.offsetTop;
+      if (firstRowTop === null) firstRowTop = top;
+      if (top !== firstRowTop) break;
       cols++;
     }
 
-    const safeCols = cols > 0 ? cols : 2;
+    const safeCols = Math.max(cols, 2);
     const rows = safeCols > MAX_SAFE_COLS ? Math.ceil(safeCols / 2) : BASE_ROWS;
 
-    const initialVisible = safeCols * rows;
-
+    const totalVisible = safeCols * rows;
     setColumns(safeCols);
-    setMaxVisible(initialVisible);
-    setVisibleCount(initialVisible);
+    setMaxVisible(totalVisible);
+    setLoadStep(totalVisible);
   };
 
   useEffect(() => {
-    const recalc = () => {
-      requestAnimationFrame(() => {
-        calculateColumnsFromGrid();
-      });
-    };
-
+    const recalc = () => requestAnimationFrame(calculateGridLayout);
     recalc();
     window.addEventListener('resize', recalc);
-    return () => {
-      window.removeEventListener('resize', recalc);
-    };
+    return () => window.removeEventListener('resize', recalc);
   }, [movies]);
 
-  const handleLoadMore = () => {
-    setMaxVisible((prev) => prev + visibleCount);
-  };
+  const handleLoadMore = () => setMaxVisible((prev) => prev + loadStep);
 
-  const visible = movies.slice(0, maxVisible);
-  const leftover = visible.length % columns;
-  const startGrowIndex =
-    leftover > 0 ? visible.length - leftover : visible.length;
-
-  const isAllVisible = maxVisible >= movies.length;
+  const visibleMovies = movies.slice(0, maxVisible);
+  const leftover = visibleMovies.length % columns;
+  const growStartIndex = leftover
+    ? visibleMovies.length - leftover
+    : visibleMovies.length;
+  const allVisible = maxVisible >= movies.length;
 
   return (
     <section className={styles.newReleaseSection}>
-      <h2>New Release</h2>
+      <h2>Explore More</h2>
       <div ref={gridRef} className={styles.gridWrapper}>
-        {visible.map((movie, idx) => (
+        {visibleMovies.map((movie, index) => (
           <ScrollRevealItem
             key={movie.id}
             className={clsx(
-              idx >= startGrowIndex && styles.grow,
-              styles.cardReveal // kalau kamu mau kasih style default
+              index >= growStartIndex && styles.grow,
+              styles.cardReveal
             )}
           >
             <MovieCard {...movie} />
           </ScrollRevealItem>
         ))}
 
-        {!isAllVisible && (
+        {!allVisible && (
           <div className={styles.loadMoreWrapper}>
             <Button
               className={styles.button}
