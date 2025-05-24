@@ -4,19 +4,41 @@ import { MovieCard } from '@/components/ui/MovieCard';
 import { Button } from '@/components/ui/Button';
 import clsx from 'clsx';
 import styles from './ExploreMore.module.scss';
+import { getPopularMoviesChunk } from '@/services/getPopularMoviesChunk';
 
-interface ExploreMoreProps {
-  movies: Movie[];
+interface Movie {
+  id: number | string;
+  movieId: number | string;
+  title: string;
+  poster: string;
+  rating: number;
+  isTrending?: boolean;
+  index?: number;
 }
 
-export const ExploreMore: React.FC<ExploreMoreProps> = ({ movies }) => {
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [columns, setColumns] = useState(2);
-  const [maxVisible, setMaxVisible] = useState(6);
-  const [loadStep, setLoadStep] = useState(6);
+const LOAD_STEP = 100; // jumlah movie yang ditambah per load
+const FETCH_PAGE_CHUNK = 5; // jumlah page per fetch
 
-  const BASE_ROWS = 4;
-  const MAX_SAFE_COLS = 5;
+export const ExploreMore: React.FC = () => {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [currentPage, setCurrentPage] = useState(1); // track page untuk fetch berikutnya
+
+  const [cols, setCols] = useState(1);
+  const [maxVisible, setMaxVisible] = useState(LOAD_STEP);
+  const [lastRowIndices, setLastRowIndices] = useState<number[]>([]);
+
+  const calculateCols = () => {
+    const wrapper = gridRef.current;
+    if (!wrapper) return 1;
+    const style = window.getComputedStyle(wrapper);
+    const columns = style.getPropertyValue('grid-template-columns');
+    return columns.split(' ').length || 1;
+  };
+
+  const adjustCountToCols = (count: number, cols: number) => {
+    return Math.ceil(count / cols) * cols;
+  };
 
   const calculateGridLayout = () => {
     const wrapper = gridRef.current;
@@ -24,73 +46,98 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ movies }) => {
 
     const movieCards = Array.from(wrapper.children).filter(
       (el) =>
-        !(el as HTMLElement).matches(
-          `.${styles.grow}, .${styles.loadMoreWrapper}`
-        )
+        !(el as HTMLElement).classList.contains(styles.grow) &&
+        !(el as HTMLElement).classList.contains(styles.loadMoreWrapper)
     ) as HTMLElement[];
 
-    let cols = 0;
+    if (movieCards.length === 0) return;
+
+    const rowsMap = new Map<number, number[]>();
     let firstRowTop: number | null = null;
 
-    for (const card of movieCards) {
+    movieCards.forEach((card, idx) => {
       const top = card.offsetTop;
       if (firstRowTop === null) firstRowTop = top;
-      if (top !== firstRowTop) break;
-      cols++;
-    }
 
-    const safeCols = Math.max(cols, 2);
-    const rows = safeCols > MAX_SAFE_COLS ? Math.ceil(safeCols / 2) : BASE_ROWS;
+      if (!rowsMap.has(top)) rowsMap.set(top, []);
+      rowsMap.get(top)!.push(idx);
+    });
 
-    const totalVisible = safeCols * rows;
-    setColumns(safeCols);
-    setMaxVisible(totalVisible);
-    setLoadStep(totalVisible);
+    const allTops = Array.from(rowsMap.keys());
+    const maxTop = Math.max(...allTops);
+    setLastRowIndices(rowsMap.get(maxTop) || []);
   };
 
   useEffect(() => {
-    const recalc = () => requestAnimationFrame(calculateGridLayout);
-    recalc();
-    window.addEventListener('resize', recalc);
-    return () => window.removeEventListener('resize', recalc);
-  }, [movies]);
+    const onResize = () => {
+      const currentCols = calculateCols();
+      setCols(currentCols);
+      setMaxVisible((prev) => adjustCountToCols(prev, currentCols));
+      requestAnimationFrame(calculateGridLayout);
+    };
 
-  const handleLoadMore = () => setMaxVisible((prev) => prev + loadStep);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
-  const visibleMovies = movies.slice(0, maxVisible);
-  const leftover = visibleMovies.length % columns;
-  const growStartIndex = leftover
-    ? visibleMovies.length - leftover
-    : visibleMovies.length;
-  const allVisible = maxVisible >= movies.length;
+  useEffect(() => {
+    requestAnimationFrame(calculateGridLayout);
+  }, [movies, maxVisible]);
+
+  // Fetch awal (index 0 - 99)
+  useEffect(() => {
+    const fetchInitialMovies = async () => {
+      const initial = await getPopularMoviesChunk(0, LOAD_STEP);
+      setMovies(initial);
+      setCurrentPage(1); // index page berikutnya
+    };
+
+    fetchInitialMovies();
+  }, []);
+
+  const handleLoadMore = async () => {
+    const startIndex = currentPage * LOAD_STEP; // LOAD_STEP = 100
+    const newMovies = await getPopularMoviesChunk(startIndex, LOAD_STEP);
+    setMovies((prev) => [...prev, ...newMovies]);
+    setCurrentPage((prev) => prev + 1);
+
+    setMaxVisible((prev) => {
+      const newCount = prev + LOAD_STEP;
+      return adjustCountToCols(newCount, cols);
+    });
+  };
+
+  const visibleMovies = movies.slice(0, Math.min(maxVisible, movies.length));
+  const allVisible = visibleMovies.length >= movies.length;
 
   return (
     <section className={styles.newReleaseSection}>
       <h2>Explore More</h2>
       <div ref={gridRef} className={styles.gridWrapper}>
-        {visibleMovies.map((movie, index) => (
-          <ScrollRevealItem
-            key={movie.id}
-            className={clsx(
-              index >= growStartIndex && styles.grow,
-              styles.cardReveal
-            )}
-          >
-            <MovieCard {...movie} />
-          </ScrollRevealItem>
-        ))}
+        {visibleMovies.map((movie, index) => {
+          const isLastRow = lastRowIndices.includes(index);
 
-        {!allVisible && (
-          <div className={styles.loadMoreWrapper}>
-            <Button
-              className={styles.button}
-              variant='secondary'
-              onClick={handleLoadMore}
+          return (
+            <ScrollRevealItem
+              key={`${movie.id}-${index}`}
+              className={clsx(styles.grow, styles.cardReveal)}
             >
-              Load More
-            </Button>
-          </div>
-        )}
+              <MovieCard {...movie} isDisabled={isLastRow} />
+            </ScrollRevealItem>
+          );
+        })}
+
+        <div className={styles.loadMoreWrapper}>
+          <Button
+            className={styles.button}
+            variant='secondary'
+            onClick={handleLoadMore}
+            // disabled={allVisible}
+          >
+            {'Load More'}
+          </Button>
+        </div>
       </div>
     </section>
   );

@@ -35,9 +35,6 @@
   justify-self: stretch;
   }
 
-
-  // buang aja nth-child hide karena JS yg slice
-  // gradient fade
   &::after {
     content: '';
     position: absolute;

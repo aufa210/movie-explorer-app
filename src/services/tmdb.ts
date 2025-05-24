@@ -21,9 +21,25 @@ export const getTrendingMovies = () => {
   return fetchFromTMDB('/trending/movie/week');
 };
 
-export const getPopularMovies = async () => {
-  const res = await fetchFromTMDB('/movie/popular');
-  // Sort descending berdasarkan rating (vote_average)
-  res.results.sort((a: any, b: any) => b.vote_average - a.vote_average);
-  return res;
-};
+// export const getPopularMovies = async (totalPages = 10) => {
+//   let results: any[] = [];
+
+//   for (let page = 1; page <= totalPages; page++) {
+//     const res = await fetchFromTMDB('/movie/popular', { page: page.toString() });
+//     results = results.concat(res.results);
+//   }
+
+//   return { results };
+// };
+
+// export const getPopularMovies = async (totalPages = 5) => {
+//   let results: any[] = [];
+
+//   for (let page = 1; page <= totalPages; page++) {
+//     const res = await fetchFromTMDB('/movie/popular', { page: page.toString() });
+//     results = results.concat(res.results);
+//   }
+
+//   results.sort((a: any, b: any) => b.vote_average - a.vote_average);
+//   return { results };
+// };
