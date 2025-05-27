@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MovieCard.module.scss';
 import StarIcon from '@/assets/Star.svg';
+import clsx from 'clsx';
 
 interface MovieCardProps {
   movieId: number | string;
@@ -30,9 +31,12 @@ export const MovieCard: React.FC<MovieCardProps> = ({
         <img
           src={imgSrc}
           alt={title}
+          title={title}
           className={styles.image}
           loading='lazy'
-          onError={() => setImgSrc('/placeholder.jpg')}
+          onError={() => {
+            if (imgSrc !== '/placeholder.jpg') setImgSrc('/placeholder.jpg');
+          }}
         />
         {isTrending && typeof index === 'number' && (
           <div className={styles.trendingBadge}>{index + 1}</div>
@@ -48,11 +52,19 @@ export const MovieCard: React.FC<MovieCardProps> = ({
     </div>
   );
 
-  return isDisabled ? (
-    <div className={`${styles.link} ${styles.disabled}`} aria-hidden='true'>
-      {CardContent}
-    </div>
-  ) : (
+  if (isDisabled) {
+    return (
+      <div
+        className={clsx(styles.link, styles.disabled)}
+        aria-disabled='true'
+        tabIndex={-1}
+      >
+        {CardContent}
+      </div>
+    );
+  }
+
+  return (
     <Link
       to={`/detail/${movieId}`}
       className={styles.link}

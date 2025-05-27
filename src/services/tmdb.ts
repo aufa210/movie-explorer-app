@@ -18,7 +18,7 @@ const fetchFromTMDB = async (
 };
 
 export const getTrendingMovies = () => {
-  return fetchFromTMDB('/trending/movie/week');
+  return fetchFromTMDB('/trending/movie/day');
 };
 
 // export const getPopularMovies = async (totalPages = 10) => {

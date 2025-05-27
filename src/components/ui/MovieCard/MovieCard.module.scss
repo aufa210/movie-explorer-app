@@ -103,5 +103,8 @@
 
 .disabled {
   pointer-events: none;
-  opacity: 0.5; // opsional, kasih efek "disabled"
+  opacity: 0.5;
+  filter: grayscale(0.4);
+  transition: opacity 0.3s ease;
 }
+

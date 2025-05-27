@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY; // Ganti dengan TMDB API Key
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
@@ -22,18 +22,26 @@ export async function getPopularMoviesChunk(startIndex: number, count: number): 
   let allMovies: any[] = [];
 
   for (let page = startPage; page <= endPage; page++) {
-    const res = await axios.get(`${BASE_URL}/movie/popular`, {
-        params: {
-        api_key: API_KEY,
-        page,
-        language: 'en-US',
-        },
+    // const res = await axios.get(`${BASE_URL}/movie/popular`, {
+    //   params: {
+    //   api_key: API_KEY,
+    //   page,
+    //   language: 'en-US',
+    //   },
+    // });
+
+    const res = await axios.get(`${BASE_URL}/discover/movie`, {
+      params: {
+      api_key: API_KEY,
+      page,
+      language: 'en-US',
+      },
     });
 
-    console.log(`Page ${page}:`, res.data); // Tambahkan ini
+    // console.log(`Page ${page}:`, res.data); // Tambahkan ini
 
     allMovies = allMovies.concat(res.data.results);
-    }
+  }
 
 
   const offset = startIndex % itemsPerPage;

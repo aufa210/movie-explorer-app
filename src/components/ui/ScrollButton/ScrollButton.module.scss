@@ -1,0 +1,21 @@
+.wrapper {
+  position: fixed;
+  right: rem-calc(38);
+  bottom: rem-calc(140);
+  z-index: 9999;
+  
+  button {
+    width: rem-calc(64);
+    height: rem-calc(64);
+  }
+}
+
+.iconUp {
+  transition: transform 0.3s ease;
+  transform: rotate(180deg);
+}
+
+.iconDown {
+  transition: transform 0.3s ease;
+  transform: rotate(0deg);
+}
