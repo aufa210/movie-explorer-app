@@ -58,12 +58,21 @@ export const Home: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', marginTop: '2rem' }}>Loading...</div>
+      <div
+        style={{
+          display: 'fixed',
+          color: 'white',
+          textAlign: 'center',
+          marginTop: '200px',
+        }}
+      >
+        Loading...
+      </div>
     );
   }
 
   // First trending movie for Hero section
-  const trendingHeroMovie = trendingMovies[0];
+  const trendingHeroMovie = trendingMovies[6];
 
   return (
     <div>

@@ -11,6 +11,10 @@
   border-radius: 50%;
   cursor: pointer;
   z-index: 3;
+
+  &:hover {
+    filter: brightness(3);
+  }
   
   @include md {
     width: rem-calc(56);

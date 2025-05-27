@@ -20,7 +20,8 @@
   }
 
   &.focused {
-    background-color: #2d2d2d;
+    // background-color: #2d2d2d;
+    filter: brightness(1.5);
     border-color: #E41D02;
     box-shadow: 0 0 0 2px rgba(#E41D02, 0.3);
   }

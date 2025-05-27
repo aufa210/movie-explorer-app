@@ -23,6 +23,7 @@ interface ExploreMoreProps {
 }
 
 const LOAD_STEP = 100;
+const STORAGE_KEY = 'exploreMoreState';
 
 export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
   const { gridRef, cols, lastRowIndices, recalculateGrid } = useGridLayout();
@@ -32,18 +33,42 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
   const [maxVisible, setMaxVisible] = useState(LOAD_STEP);
   const [layoutReady, setLayoutReady] = useState(false);
 
-  // Fetch initial batch of movies once component mounts
+  // Restore from sessionStorage or fetch initial batch
   useEffect(() => {
-    const fetchInitialMovies = async () => {
+    const savedState = sessionStorage.getItem(STORAGE_KEY);
+    if (savedState) {
+      try {
+        const { movies, currentPage, maxVisible } = JSON.parse(savedState);
+        setMovies(movies);
+        setCurrentPage(currentPage);
+        setMaxVisible(maxVisible);
+        setLayoutReady(false);
+      } catch (e) {
+        console.error('Failed to parse saved ExploreMore state:', e);
+        fetchInitialMovies();
+      }
+    } else {
+      fetchInitialMovies();
+    }
+
+    async function fetchInitialMovies() {
       const initial = await getPopularMoviesChunk(0, LOAD_STEP);
       setMovies(initial);
       setCurrentPage(1);
       setMaxVisible(LOAD_STEP);
-      setLayoutReady(false); // reset layoutReady for fresh fetch
-    };
-
-    fetchInitialMovies();
+      setLayoutReady(false);
+    }
   }, []);
+
+  // Save to sessionStorage on changes
+  useEffect(() => {
+    if (movies.length > 0) {
+      sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ movies, currentPage, maxVisible })
+      );
+    }
+  }, [movies, currentPage, maxVisible]);
 
   // Recalculate grid layout when movies or maxVisible changes
   useEffect(() => {
