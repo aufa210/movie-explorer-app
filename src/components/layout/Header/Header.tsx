@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import styles from './Header.module.scss';
 import SearchBox from '../../ui/SearchBox/SearchBox';
@@ -27,7 +28,12 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className={clsx(styles.header, scrolled && styles.scrolled)}>
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className={clsx(styles.header, scrolled && styles.scrolled)}
+      >
         <div className={styles.left}>
           <MovieIcon className={styles.logo} />
           <nav className={styles.navDesktop}>
@@ -60,7 +66,7 @@ export const Header: React.FC = () => {
             <MenuIcon />
           </button>
         </div>
-      </header>
+      </motion.header>
 
       {/* MOBILE SEARCH OVERLAY */}
       <div className={clsx(styles.searchOverlay, searchOpen && styles.open)}>

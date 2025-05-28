@@ -20,23 +20,20 @@
     background-position: center;
     background-repeat: no-repeat;
 
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
-      z-index: 1;
-
-      @include md {
-        background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
-      }
-    }
-
     @include md {
-      // height: rem-calc(810);
       height: 100vh;
       filter: brightness(0.74);
     }
+  }
+
+  .gradientOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
   }
 
   .textBlock {
@@ -79,7 +76,6 @@
     @include md {
       flex-direction: row;
       width: rem-calc(476);
-      // #0a0d1299;
     }
   }
 }

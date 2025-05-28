@@ -4,6 +4,7 @@ import { Hero } from '@/components/sections/Hero';
 import { TrendingNow } from '@/components/sections/TrendingNow';
 import { ExploreMore } from '@/components/sections/ExploreMore';
 import { ScrollButton } from '@/components/ui/ScrollButton';
+import { LoadingAnimation } from '@/components/ui/LoadingAnimation';
 import { Footer } from '@/components/layout/Footer';
 import { getTrendingMovies } from '@/services/tmdb';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration/useScrollRestoration';
@@ -57,22 +58,11 @@ export const Home: React.FC = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div
-        style={{
-          display: 'fixed',
-          color: 'white',
-          textAlign: 'center',
-          marginTop: '200px',
-        }}
-      >
-        Loading...
-      </div>
-    );
+    return <LoadingAnimation text='Loading Content...' onlyText={true} />;
   }
 
   // First trending movie for Hero section
-  const trendingHeroMovie = trendingMovies[6];
+  const trendingHeroMovie = trendingMovies[0];
 
   return (
     <div>

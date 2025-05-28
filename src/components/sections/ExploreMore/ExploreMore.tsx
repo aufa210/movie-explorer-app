@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
+import styles from './ExploreMore.module.scss';
 import { ScrollRevealItem } from '@/components/ui/ScrollRevealItem';
 import { MovieCard } from '@/components/ui/MovieCard';
 import { Button } from '@/components/ui/Button';
-import clsx from 'clsx';
-import styles from './ExploreMore.module.scss';
+import { LoadingAnimation } from '@/components/ui/LoadingAnimation';
 import { getPopularMoviesChunk } from '@/services/getPopularMoviesChunk';
 import { useGridLayout } from '@/hooks/useGridLayout/useGridLayout';
 import { useDisableLastRow } from '@/hooks/useDisableLastRow/useDisableLastRow';
@@ -22,7 +23,8 @@ interface ExploreMoreProps {
   onReady?: () => void;
 }
 
-const LOAD_STEP = 100;
+const INITIAL_LOAD = 50;
+const LOAD_STEP = 25;
 const STORAGE_KEY = 'exploreMoreState';
 
 export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
@@ -30,8 +32,9 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [maxVisible, setMaxVisible] = useState(LOAD_STEP);
+  const [maxVisible, setMaxVisible] = useState(INITIAL_LOAD);
   const [layoutReady, setLayoutReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Restore from sessionStorage or fetch initial batch
   useEffect(() => {
@@ -52,10 +55,10 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     }
 
     async function fetchInitialMovies() {
-      const initial = await getPopularMoviesChunk(0, LOAD_STEP);
+      const initial = await getPopularMoviesChunk(0, INITIAL_LOAD);
       setMovies(initial);
       setCurrentPage(1);
-      setMaxVisible(LOAD_STEP);
+      setMaxVisible(INITIAL_LOAD);
       setLayoutReady(false);
     }
   }, []);
@@ -90,12 +93,23 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
 
   // Handler to load more movies
   const handleLoadMore = async () => {
+    setIsLoading(true);
     const startIndex = currentPage * LOAD_STEP;
     const newMovies = await getPopularMoviesChunk(startIndex, LOAD_STEP);
+
+    // ✅ Tambahkan ini untuk log hasil yang difetch
+    console.log(
+      `Fetched page ${currentPage + 1}`,
+      newMovies.map((movie) => ({
+        id: movie.movieId || movie.id,
+        title: movie.title,
+      }))
+    );
 
     setMovies((prev) => [...prev, ...newMovies]);
     setCurrentPage((prev) => prev + 1);
     setMaxVisible((prev) => prev + LOAD_STEP);
+    setIsLoading(false);
   };
 
   // Slice movies to show only up to maxVisible
@@ -121,15 +135,25 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
         })}
 
         <div className={styles.loadMoreWrapper}>
-          <Button
-            className={styles.button}
-            variant='secondary'
-            onClick={handleLoadMore}
-          >
-            Load More
-          </Button>
+          {isLoading ? (
+            <LoadingAnimation text='Loading Data...' />
+          ) : (
+            <Button
+              className={styles.button}
+              variant='secondary'
+              onClick={handleLoadMore}
+            >
+              Load More
+            </Button>
+          )}
         </div>
       </div>
     </section>
   );
 };
+// haha salah,
+// oke sekarang kita lanjut, terkadang ada beberapa duplikasi movie yang terjadi, kadang satu baris, atau hanya satu movie. intinya tidak menentu, nah saya ingin menambahkan logic untuk mencegah duplikasi ini. btw duplikasi ini hanya terjadi di ExploreMore yang menggunakan api /discover/movie, berbeda dengan TrendingNow. ingat harus clean, modular, n best practice
+
+// btw butuh referensi file?
+
+// sepertinya saya harus mengeceknya terlebih dahulu, apakah itu dari fetch saya atau dari api, coba tolong berikna caranya. baru kita tindak lanjuti setelah melihat hasilnya

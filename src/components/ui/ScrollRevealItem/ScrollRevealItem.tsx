@@ -1,31 +1,39 @@
-import React from 'react';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
-import clsx from 'clsx';
-import styles from './ScrollRevealItem.module.scss';
+// components/ui/ScrollRevealItem.tsx
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 interface ScrollRevealItemProps {
   className?: string;
   children: React.ReactNode;
-  once?: boolean; // opsional, agar tidak terus-terusan reveal
+  delay?: number;
+  duration?: number;
 }
 
 export const ScrollRevealItem: React.FC<ScrollRevealItemProps> = ({
   className,
   children,
-  once = true,
+  delay = 0.1,
+  duration = 0.6,
 }) => {
-  const { ref, isVisible } = useScrollReveal({ once });
+  const ref = useRef(null);
+  const isInView = useInView(ref, {
+    once: false, // penting: agar bisa animasi ulang
+    amount: 0.2, // 20% masuk viewport langsung animasi
+  });
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className={clsx(
-        styles.cardReveal,
-        className,
-        isVisible && styles.visible
-      )}
+      className={className}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={
+        isInView
+          ? { opacity: 1, y: 0, scale: 1 }
+          : { opacity: 0, y: 20, scale: 0.95 }
+      }
+      transition={{ duration, delay, ease: 'easeOut' }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };
