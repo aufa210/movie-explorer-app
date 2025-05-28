@@ -1,0 +1,34 @@
+export interface BaseMovie {
+  id: number;
+  movieId?: number;
+  title: string;
+  poster: string;
+  rating: number;
+  overview?: string;
+  backdropUrl?: string;
+  releaseDate?: string;
+  genreIds?: number[];
+  isTrending?: boolean;
+  index?: number;
+  isDisabled?: boolean;
+}
+
+export interface MovieWithCredits extends BaseMovie {
+  casts: Cast[];
+  crews: Crew[];
+}
+
+export interface Cast {
+  id: number;
+  name: string;
+  character: string;
+  profileUrl: string;
+}
+
+export interface Crew {
+  id: number;
+  name: string;
+  job: string;
+  department: string;
+  profileUrl: string;
+}

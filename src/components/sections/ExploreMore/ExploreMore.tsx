@@ -8,6 +8,7 @@ import { LoadingAnimation } from '@/components/ui/LoadingAnimation';
 import { getPopularMoviesChunk } from '@/services/getPopularMoviesChunk';
 import { useGridLayout } from '@/hooks/useGridLayout/useGridLayout';
 import { useDisableLastRow } from '@/hooks/useDisableLastRow/useDisableLastRow';
+import { removeDuplicateMovies } from '@/utils/removeDuplicateMovies';
 
 interface Movie {
   id: number | string;
@@ -56,7 +57,7 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
 
     async function fetchInitialMovies() {
       const initial = await getPopularMoviesChunk(0, INITIAL_LOAD);
-      setMovies(initial);
+      setMovies(removeDuplicateMovies(initial));
       setCurrentPage(1);
       setMaxVisible(INITIAL_LOAD);
       setLayoutReady(false);
@@ -91,48 +92,37 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     }
   }, [movies, maxVisible, lastRowIndices, layoutReady, onReady]);
 
-  // Handler to load more movies
   const handleLoadMore = async () => {
     setIsLoading(true);
     const startIndex = currentPage * LOAD_STEP;
     const newMovies = await getPopularMoviesChunk(startIndex, LOAD_STEP);
 
-    // ✅ Tambahkan ini untuk log hasil yang difetch
     console.log(
       `Fetched page ${currentPage + 1}`,
-      newMovies.map((movie) => ({
-        id: movie.movieId || movie.id,
-        title: movie.title,
-      }))
+      newMovies.map((m) => ({ id: m.movieId || m.id, title: m.title }))
     );
 
-    setMovies((prev) => [...prev, ...newMovies]);
+    setMovies((prev) => removeDuplicateMovies([...prev, ...newMovies]));
     setCurrentPage((prev) => prev + 1);
     setMaxVisible((prev) => prev + LOAD_STEP);
     setIsLoading(false);
   };
 
-  // Slice movies to show only up to maxVisible
   const visibleMovies = movies.slice(0, Math.min(maxVisible, movies.length));
-
-  // Determine which movies in the last row should be disabled
   const disabledFlags = useDisableLastRow(visibleMovies, cols);
 
   return (
     <section className={styles.newReleaseSection}>
       <h2>Explore More</h2>
       <div ref={gridRef} className={styles.gridWrapper}>
-        {visibleMovies.map((movie, index) => {
-          const isDisabled = disabledFlags[index];
-          return (
-            <ScrollRevealItem
-              key={`${movie.id}-${index}`}
-              className={clsx(styles.grow, styles.cardReveal)}
-            >
-              <MovieCard {...movie} isDisabled={isDisabled} />
-            </ScrollRevealItem>
-          );
-        })}
+        {visibleMovies.map((movie, index) => (
+          <ScrollRevealItem
+            key={movie.id}
+            className={clsx(styles.grow, styles.cardReveal)}
+          >
+            <MovieCard {...movie} isDisabled={disabledFlags[index]} />
+          </ScrollRevealItem>
+        ))}
 
         <div className={styles.loadMoreWrapper}>
           {isLoading ? (
@@ -151,9 +141,3 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     </section>
   );
 };
-// haha salah,
-// oke sekarang kita lanjut, terkadang ada beberapa duplikasi movie yang terjadi, kadang satu baris, atau hanya satu movie. intinya tidak menentu, nah saya ingin menambahkan logic untuk mencegah duplikasi ini. btw duplikasi ini hanya terjadi di ExploreMore yang menggunakan api /discover/movie, berbeda dengan TrendingNow. ingat harus clean, modular, n best practice
-
-// btw butuh referensi file?
-
-// sepertinya saya harus mengeceknya terlebih dahulu, apakah itu dari fetch saya atau dari api, coba tolong berikna caranya. baru kita tindak lanjuti setelah melihat hasilnya
