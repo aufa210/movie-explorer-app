@@ -15,8 +15,8 @@ interface ExploreMoreProps {
   onReady?: () => void;
 }
 
-const INITIAL_LOAD = 50;
-const LOAD_STEP = 25;
+const INITIAL_LOAD = 60;
+const LOAD_STEP = 20;
 const STORAGE_KEY = 'exploreMoreState';
 
 export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
@@ -86,7 +86,7 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
   const handleLoadMore = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const startIndex = currentPage * LOAD_STEP;
+      const startIndex = maxVisible; // start dari jumlah visible item sekarang
       const newMovies = await getPopularMoviesChunk(startIndex, LOAD_STEP);
       setMovies((prev) => removeDuplicateMovies([...prev, ...newMovies]));
       setCurrentPage((prev) => prev + 1);
@@ -94,13 +94,13 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage]);
+  }, [maxVisible]);
 
   const visibleMovies = React.useMemo(
     () => movies.slice(0, Math.min(maxVisible, movies.length)),
     [movies, maxVisible]
   );
-  const disabledFlags = useDisableLastRow(visibleMovies, cols);
+  const disabledFlags = useDisableLastRow(visibleMovies, lastRowIndices);
 
   return (
     <section className={styles.newReleaseSection}>
@@ -132,5 +132,3 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     </section>
   );
 };
-// button malah tidak muncul saat dipakah kode terbaru
-// ada behavior aneh saat klik Load More & Fetch Data dari saat movie sudah mencapai...
