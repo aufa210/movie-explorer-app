@@ -1,3 +1,5 @@
+// types/tmdb.ts
+
 export interface TmdbMovie {
   id: number;
   title: string;
@@ -14,7 +16,7 @@ export interface TmdbMovie {
 export interface TmdbCredits {
   id: number;
   cast: TmdbCast[];
-  crew: TmdbCrew[];
+  crew: TmdbCrew[]; // Tetap disimpan, tidak harus dipakai
 }
 
 export interface TmdbCast {

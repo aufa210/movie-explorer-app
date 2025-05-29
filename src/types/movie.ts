@@ -1,6 +1,5 @@
 export interface BaseMovie {
   id: number;
-  movieId?: number;
   title: string;
   poster: string;
   rating: number;
@@ -13,9 +12,8 @@ export interface BaseMovie {
   isDisabled?: boolean;
 }
 
-export interface MovieWithCredits extends BaseMovie {
+export interface MovieWithCasts extends BaseMovie {
   casts: Cast[];
-  crews: Crew[];
 }
 
 export interface Cast {

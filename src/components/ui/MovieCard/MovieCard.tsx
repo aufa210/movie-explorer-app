@@ -1,18 +1,12 @@
-// MovieCard.tsx
 import React, { useState, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import styles from './MovieCard.module.scss';
 import StarIcon from '@/assets/Star.svg';
+import { BaseMovie } from '@/types/movie';
 
-interface MovieCardProps {
-  movieId: number | string;
-  title: string;
-  poster: string;
-  rating: number;
-  isTrending?: boolean;
-  index?: number;
+interface MovieCardProps extends BaseMovie {
   isDisabled?: boolean;
 }
 
@@ -66,7 +60,7 @@ CardContent.displayName = 'CardContent';
 
 export const MovieCard: React.FC<MovieCardProps> = memo(
   ({
-    movieId,
+    id,
     title,
     poster,
     rating,
@@ -105,7 +99,7 @@ export const MovieCard: React.FC<MovieCardProps> = memo(
       </div>
     ) : (
       <Link
-        to={`/detail/${movieId}`}
+        to={`/detail/${id}`}
         className={styles.link}
         aria-label={`See detail for ${title}`}
       >

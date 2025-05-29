@@ -3,16 +3,9 @@ import clsx from 'clsx';
 import { CarouselArrow } from '@/components/ui/CarouselArrow';
 import { MovieCard } from '@/components/ui/MovieCard';
 import styles from './TrendingNow.module.scss';
+import { BaseMovie } from '@/types/movie';
 
-export interface Movie {
-  movieId: number | string;
-  title: string;
-  poster: string;
-  rating: number;
-  isTrending?: boolean;
-}
-
-export const TrendingNow: React.FC<{ movies: Movie[] }> = ({ movies }) => {
+export const TrendingNow: React.FC<{ movies: BaseMovie[] }> = ({ movies }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [slideWidth, setSlideWidth] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -89,7 +82,7 @@ export const TrendingNow: React.FC<{ movies: Movie[] }> = ({ movies }) => {
           onScroll={handleScroll}
         >
           {movies.map((m, index) => (
-            <div key={m.movieId} className={styles.slide}>
+            <div key={m.id} className={styles.slide}>
               <MovieCard {...m} isTrending index={index} />
             </div>
           ))}

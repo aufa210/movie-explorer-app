@@ -8,20 +8,11 @@ import { LoadingAnimation } from '@/components/ui/LoadingAnimation';
 import { Footer } from '@/components/layout/Footer';
 import { getTrendingMovies } from '@/services/tmdb';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration/useScrollRestoration';
-
-interface Movie {
-  title: string;
-  poster: string;
-  rating: number;
-  isTrending?: boolean;
-  backdropUrl?: string;
-  overview?: string;
-  id?: number | string;
-  index?: number;
-}
+import { BaseMovie } from '@/types/movie';
+import { normalizeMovie } from '@/utils/normalizeMovie';
 
 export const Home: React.FC = () => {
-  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
+  const [trendingMovies, setTrendingMovies] = useState<BaseMovie[]>([]);
   const [loading, setLoading] = useState(true);
   const [exploreReady, setExploreReady] = useState(false);
 
@@ -35,16 +26,9 @@ export const Home: React.FC = () => {
         const trendingRes = await getTrendingMovies();
 
         // Map TMDB data to your Movie interface
-        const trending = trendingRes.results.map((m: any) => ({
-          title: m.title,
-          poster: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-          rating: m.vote_average,
-          isTrending: true,
-          backdropUrl: `https://image.tmdb.org/t/p/original${m.backdrop_path}`,
-          overview: m.overview,
-          id: m.id,
-          index: m.id,
-        }));
+        const trending = trendingRes.results.map((m: any) =>
+          normalizeMovie({ ...m, isTrending: true, index: m.id })
+        );
 
         setTrendingMovies(trending);
       } catch (error) {
@@ -67,14 +51,7 @@ export const Home: React.FC = () => {
   return (
     <div>
       <Header />
-      {trendingHeroMovie && (
-        <Hero
-          backdropUrl={trendingHeroMovie.backdropUrl}
-          title={trendingHeroMovie.title}
-          overview={trendingHeroMovie.overview}
-          movieId={trendingHeroMovie.id}
-        />
-      )}
+      {trendingHeroMovie && <Hero {...trendingHeroMovie} />}
       <TrendingNow movies={trendingMovies} />
       <ExploreMore onReady={() => setExploreReady(true)} />
       <ScrollButton />

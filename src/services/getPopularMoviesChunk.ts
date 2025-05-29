@@ -1,48 +1,33 @@
 import axios from 'axios';
+import { BaseMovie } from '@/types/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
-export interface Movie {
-  id: number | string;
-  movieId: number | string;
-  title: string;
-  poster: string;
-  rating: number;
-  isTrending?: boolean;
-  index?: number;
-}
-
-export async function getPopularMoviesChunk(startIndex: number, count: number): Promise<Movie[]> {
+export async function getPopularMoviesChunk(startIndex: number, count: number): Promise<BaseMovie[]> {
   const itemsPerPage = 20;
   const startPage = Math.floor(startIndex / itemsPerPage) + 1;
   const endPage = Math.floor((startIndex + count - 1) / itemsPerPage) + 1;
 
   let allMovies: any[] = [];
 
-  for (let page = startPage; page <= endPage; page++) {
-    // const res = await axios.get(`${BASE_URL}/movie/popular`, {
-    //   params: {
-    //   api_key: API_KEY,
-    //   page,
-    //   language: 'en-US',
-    //   },
-    // });
+  try {
+    for (let page = startPage; page <= endPage; page++) {
+      const res = await axios.get(`${BASE_URL}/discover/movie`, {
+        params: {
+          api_key: API_KEY,
+          page,
+          language: 'en-US',
+        },
+      });
 
-    const res = await axios.get(`${BASE_URL}/discover/movie`, {
-      params: {
-      api_key: API_KEY,
-      page,
-      language: 'en-US',
-      },
-    });
-
-    // console.log(`Page ${page}:`, res.data); // Tambahkan ini
-
-    allMovies = allMovies.concat(res.data.results);
+      allMovies = allMovies.concat(res.data.results);
+    }
+  } catch (error) {
+    console.error('Error fetching movies:', error);
+    return [];  // Graceful fallback: return array kosong kalau error
   }
-
 
   const offset = startIndex % itemsPerPage;
   const sliced = allMovies.slice(offset, offset + count);

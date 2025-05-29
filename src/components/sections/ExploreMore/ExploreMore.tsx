@@ -9,16 +9,7 @@ import { getPopularMoviesChunk } from '@/services/getPopularMoviesChunk';
 import { useGridLayout } from '@/hooks/useGridLayout/useGridLayout';
 import { useDisableLastRow } from '@/hooks/useDisableLastRow/useDisableLastRow';
 import { removeDuplicateMovies } from '@/utils/removeDuplicateMovies';
-
-interface Movie {
-  id: number | string;
-  movieId: number | string;
-  title: string;
-  poster: string;
-  rating: number;
-  isTrending?: boolean;
-  index?: number;
-}
+import type { BaseMovie } from '@/types/movie';
 
 interface ExploreMoreProps {
   onReady?: () => void;
@@ -30,43 +21,43 @@ const STORAGE_KEY = 'exploreMoreState';
 
 export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
   const { gridRef, cols, lastRowIndices, recalculateGrid } = useGridLayout();
-
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<BaseMovie[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxVisible, setMaxVisible] = useState(INITIAL_LOAD);
-  const [layoutReady, setLayoutReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [layoutReady, setLayoutReady] = useState(false);
 
-  // Restore from sessionStorage or fetch initial batch
+  // Restore and fetch initial data
   useEffect(() => {
-    const savedState = sessionStorage.getItem(STORAGE_KEY);
-    if (savedState) {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) {
       try {
-        const { movies, currentPage, maxVisible } = JSON.parse(savedState);
-        setMovies(movies);
-        setCurrentPage(currentPage);
-        setMaxVisible(maxVisible);
+        const parsed = JSON.parse(saved);
+        setMovies(parsed.movies);
+        setCurrentPage(parsed.currentPage);
+        setMaxVisible(parsed.maxVisible);
         setLayoutReady(false);
-      } catch (e) {
-        console.error('Failed to parse saved ExploreMore state:', e);
+      } catch {
         fetchInitialMovies();
       }
-    } else {
-      fetchInitialMovies();
-    }
+    } else fetchInitialMovies();
 
     async function fetchInitialMovies() {
-      const initial = await getPopularMoviesChunk(0, INITIAL_LOAD);
-      setMovies(removeDuplicateMovies(initial));
-      setCurrentPage(1);
-      setMaxVisible(INITIAL_LOAD);
-      setLayoutReady(false);
+      setIsLoading(true);
+      try {
+        const initial = await getPopularMoviesChunk(0, INITIAL_LOAD);
+        setMovies(removeDuplicateMovies(initial));
+        setCurrentPage(1);
+        setMaxVisible(INITIAL_LOAD);
+      } finally {
+        setIsLoading(false);
+      }
     }
   }, []);
 
-  // Save to sessionStorage on changes
+  // Save to sessionStorage on movies, currentPage or maxVisible change
   useEffect(() => {
-    if (movies.length > 0) {
+    if (movies.length) {
       sessionStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({ movies, currentPage, maxVisible })
@@ -74,12 +65,12 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     }
   }, [movies, currentPage, maxVisible]);
 
-  // Recalculate grid layout when movies or maxVisible changes
+  // Recalculate grid on changes
   useEffect(() => {
     recalculateGrid();
   }, [movies, maxVisible, recalculateGrid]);
 
-  // Trigger onReady callback only once when layout is ready
+  // Trigger onReady once layout is ready
   useEffect(() => {
     if (
       movies.length > 0 &&
@@ -92,23 +83,23 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     }
   }, [movies, maxVisible, lastRowIndices, layoutReady, onReady]);
 
-  const handleLoadMore = async () => {
+  const handleLoadMore = React.useCallback(async () => {
     setIsLoading(true);
-    const startIndex = currentPage * LOAD_STEP;
-    const newMovies = await getPopularMoviesChunk(startIndex, LOAD_STEP);
+    try {
+      const startIndex = currentPage * LOAD_STEP;
+      const newMovies = await getPopularMoviesChunk(startIndex, LOAD_STEP);
+      setMovies((prev) => removeDuplicateMovies([...prev, ...newMovies]));
+      setCurrentPage((prev) => prev + 1);
+      setMaxVisible((prev) => prev + LOAD_STEP);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage]);
 
-    console.log(
-      `Fetched page ${currentPage + 1}`,
-      newMovies.map((m) => ({ id: m.movieId || m.id, title: m.title }))
-    );
-
-    setMovies((prev) => removeDuplicateMovies([...prev, ...newMovies]));
-    setCurrentPage((prev) => prev + 1);
-    setMaxVisible((prev) => prev + LOAD_STEP);
-    setIsLoading(false);
-  };
-
-  const visibleMovies = movies.slice(0, Math.min(maxVisible, movies.length));
+  const visibleMovies = React.useMemo(
+    () => movies.slice(0, Math.min(maxVisible, movies.length)),
+    [movies, maxVisible]
+  );
   const disabledFlags = useDisableLastRow(visibleMovies, cols);
 
   return (
@@ -129,9 +120,9 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
             <LoadingAnimation text='Loading Data...' />
           ) : (
             <Button
-              className={styles.button}
               variant='secondary'
               onClick={handleLoadMore}
+              className={styles.button}
             >
               Load More
             </Button>
@@ -141,3 +132,5 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
     </section>
   );
 };
+// button malah tidak muncul saat dipakah kode terbaru
+// ada behavior aneh saat klik Load More & Fetch Data dari saat movie sudah mencapai...
