@@ -1,5 +1,3 @@
-// types/tmdb.ts
-
 export interface TmdbMovie {
   id: number;
   title: string;

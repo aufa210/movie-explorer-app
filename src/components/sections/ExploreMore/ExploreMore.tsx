@@ -15,8 +15,8 @@ interface ExploreMoreProps {
   onReady?: () => void;
 }
 
-const INITIAL_LOAD = 60;
-const LOAD_STEP = 20;
+const INITIAL_LOAD = 50;
+const LOAD_STEP = 25;
 const STORAGE_KEY = 'exploreMoreState';
 
 export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
@@ -27,7 +27,6 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [layoutReady, setLayoutReady] = useState(false);
 
-  // Restore and fetch initial data
   useEffect(() => {
     const saved = sessionStorage.getItem(STORAGE_KEY);
     if (saved) {
