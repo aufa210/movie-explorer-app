@@ -30,3 +30,9 @@ export interface Crew {
   department: string;
   profileUrl: string;
 }
+
+export interface MovieDetail extends BaseMovie {
+  genre: string[];
+  ageLimit: number;
+  casts?: Cast[];
+}

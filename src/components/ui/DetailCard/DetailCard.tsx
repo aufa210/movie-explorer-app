@@ -7,26 +7,14 @@ import { HeartIcon } from '@/components/ui/HeartIcon';
 import { MetaCard } from '@/components/ui/MetaCard';
 import { CastCard } from '@/components/ui/CastCard';
 import { Toast } from '@/components/ui/Toast';
+import { MovieDetail } from '@/types/movie';
+import { formatDateToIndoLong } from '@/utils/formatDate';
+import { fetchTrailerKey } from '@/utils/fetchTrailer';
 import CalendarIcon from '@/assets/Calendar.svg';
 import PlayIcon from '@/assets/Play.svg';
 import StarIcon from '@/assets/Star.svg';
 import VideoIcon from '@/assets/Video.svg';
 import HappyEmojiIcon from '@/assets/HappyEmoji.svg';
-import AnthonyMackie from '@/assets/AnthonyMackie.png';
-import HarrisonFord from '@/assets/HarrisonFord.png';
-import DannyRamirez from '@/assets/DannyRamirez.png';
-import ShiraHaas from '@/assets/ShiraHaas.png';
-import TimBlakeNelson from '@/assets/TimBlakeNelson.png';
-
-interface DetailCardProps {
-  backgroundUrl?: string;
-  posterUrl: string;
-  title: string;
-  releaseDate: string;
-  rating: number;
-  genre: string;
-  ageLimit: number;
-}
 
 const FavoriteButton: React.FC<{
   isFavorite: boolean;
@@ -45,10 +33,18 @@ const FavoriteButton: React.FC<{
 const CTAButtons: React.FC<{
   isFavorite: boolean;
   toggleFavorite: () => void;
-}> = ({ isFavorite, toggleFavorite }) => (
+  handleWatchTrailer: () => void;
+  isLoading: boolean;
+}> = ({ isFavorite, toggleFavorite, handleWatchTrailer, isLoading }) => (
   <div className={styles.ctaButton}>
-    <Button>
-      Watch Trailer <PlayIcon className={iconStyles.icon} />
+    <Button onClick={handleWatchTrailer} disabled={isLoading}>
+      {isLoading ? (
+        'Loading...'
+      ) : (
+        <>
+          Watch Trailer <PlayIcon className={iconStyles.icon} />
+        </>
+      )}
     </Button>
     <div className={styles.favoriteButtonWrapper}>
       <FavoriteButton isFavorite={isFavorite} onClick={toggleFavorite} />
@@ -58,12 +54,17 @@ const CTAButtons: React.FC<{
 
 const MetaCardsGroup: React.FC<{
   rating: number;
-  genre: string;
+  genre: string[];
   ageLimit: number;
 }> = ({ rating, genre, ageLimit }) => (
   <div className={styles.metaCards}>
-    <MetaCard icon={<StarIcon />} label='Rating' value={`${rating}/10`} />
-    <MetaCard icon={<VideoIcon />} label='Genre' value={genre} />
+    <MetaCard
+      icon={<StarIcon />}
+      label='Rating'
+      value={`${rating.toFixed(1)}/10`}
+    />
+    <MetaCard icon={<VideoIcon />} label='Genre' value={genre.join(', ')} />
+
     <MetaCard
       icon={<HappyEmojiIcon />}
       label='Age Limit'
@@ -72,18 +73,22 @@ const MetaCardsGroup: React.FC<{
   </div>
 );
 
-export const DetailCard: React.FC<DetailCardProps> = ({
-  backgroundUrl,
-  posterUrl,
+export const DetailCard: React.FC<MovieDetail> = ({
+  id,
+  backdropUrl,
+  poster,
   title,
   releaseDate,
   rating,
   genre,
+  overview,
   ageLimit,
+  casts = [],
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleFavorite = () => {
     const newState = !isFavorite;
@@ -94,26 +99,41 @@ export const DetailCard: React.FC<DetailCardProps> = ({
     setShowToast(true);
   };
 
+  const handleWatchTrailer = async () => {
+    setIsLoading(true);
+    const key = await fetchTrailerKey(id);
+    setIsLoading(false);
+
+    if (key) {
+      window.open(`https://www.youtube.com/watch?v=${key}`, '_blank');
+    } else {
+      setToastMessage("Trailer isn't Available");
+      setShowToast(true);
+    }
+  };
+
   return (
     <div className={styles.detailContainer}>
-      {backgroundUrl && (
+      {backdropUrl && (
         <div
           className={styles.background}
-          style={{ backgroundImage: `url(${backgroundUrl})` }}
+          style={{ backgroundImage: `url(${backdropUrl})` }}
         />
       )}
 
       <div className={styles.detailCard}>
         {/* Top Section */}
         <div className={styles.top}>
-          <img src={posterUrl} alt={title} className={styles.poster} />
+          <img src={poster} alt={title} className={styles.poster} />
 
           {/* Mobile Info */}
           <div className={styles.info}>
             <h3 className={styles.title}>{title}</h3>
             <div className={styles.date}>
               <CalendarIcon className={styles.icon} />
-              <span className={styles.releaseDate}>{releaseDate}</span>
+              {releaseDate
+                ? formatDateToIndoLong(releaseDate)
+                : 'Tanggal tidak tersedia'}
             </div>
           </div>
 
@@ -123,7 +143,9 @@ export const DetailCard: React.FC<DetailCardProps> = ({
               <h3 className={styles.title}>{title}</h3>
               <div className={styles.date}>
                 <CalendarIcon className={styles.icon} />
-                <span className={styles.releaseDate}>{releaseDate}</span>
+                {releaseDate
+                  ? formatDateToIndoLong(releaseDate)
+                  : 'Tanggal tidak tersedia'}
               </div>
             </div>
 
@@ -131,6 +153,8 @@ export const DetailCard: React.FC<DetailCardProps> = ({
             <CTAButtons
               isFavorite={isFavorite}
               toggleFavorite={toggleFavorite}
+              handleWatchTrailer={handleWatchTrailer}
+              isLoading={isLoading}
             />
 
             {/* Desktop MetaCards */}
@@ -139,7 +163,12 @@ export const DetailCard: React.FC<DetailCardProps> = ({
         </div>
 
         {/* Mobile CTA */}
-        <CTAButtons isFavorite={isFavorite} toggleFavorite={toggleFavorite} />
+        <CTAButtons
+          isFavorite={isFavorite}
+          toggleFavorite={toggleFavorite}
+          handleWatchTrailer={handleWatchTrailer}
+          isLoading={isLoading}
+        />
 
         {/* Mobile MetaCards */}
         <MetaCardsGroup rating={rating} genre={genre} ageLimit={ageLimit} />
@@ -153,43 +182,21 @@ export const DetailCard: React.FC<DetailCardProps> = ({
       {/* Overview */}
       <div className={styles.overview}>
         <h2 className={styles.overviewTitle}>Overview</h2>
-        <p className={styles.overviewText}>
-          After meeting with newly elected U.S. President Thaddeus Ross, Sam
-          finds himself in the middle of an international incident. He must
-          discover the reason behind a nefarious global plot before the true
-          mastermind has the entire world seeing red.
-        </p>
+        <p className={styles.overviewText}>{overview}</p>
       </div>
 
       {/* Cast & Crew */}
       <div className={styles.castAndCrew}>
         <h2 className={styles.castsAndCrews}>Cast & Crew</h2>
         <div className={styles.casters}>
-          <CastCard
-            image={AnthonyMackie}
-            name='Anthony Mackie'
-            character='Sam Wilson / Captain America'
-          />
-          <CastCard
-            image={HarrisonFord}
-            name='Harrison Ford'
-            character='President Thaddeus Ross'
-          />
-          <CastCard
-            image={DannyRamirez}
-            name='Danny Ramirez'
-            character='Joaquin Torres'
-          />
-          <CastCard
-            image={ShiraHaas}
-            name='Shira Haas'
-            character='Ruth Bat-Seraph'
-          />
-          <CastCard
-            image={TimBlakeNelson}
-            name='Tim Blake Nelson'
-            character='Samuel Sterns'
-          />
+          {casts.map((cast) => (
+            <CastCard
+              key={cast.id}
+              image={cast.profileUrl}
+              name={cast.name}
+              character={cast.character}
+            />
+          ))}
         </div>
       </div>
     </div>

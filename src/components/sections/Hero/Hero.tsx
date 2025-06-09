@@ -25,7 +25,7 @@ export const Hero: React.FC<BaseMovie> = ({
     if (key) {
       window.open(`https://www.youtube.com/watch?v=${key}`, '_blank');
     } else {
-      alert("Trailer isn't available."); // Replace w/ toast if needed
+      alert("Trailer isn't Available"); // Replace w/ toast if needed
     }
   };
 

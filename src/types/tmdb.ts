@@ -31,3 +31,11 @@ export interface TmdbCrew {
   department: string;
   profile_path: string;
 }
+
+export interface TmdbVideo {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+}

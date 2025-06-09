@@ -1,27 +1,37 @@
-import React from 'react';
+// pages/Detail.tsx
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom'; // Asumsikan pakai react-router
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { DetailCard } from '@/components/ui/DetailCard';
 import { ToastProvider } from '@/provider/ToastProvider';
-import CaptainAmericaPoster from '@/assets/Captain America: Brave New World.png';
-import DetailBackground from '@/assets/CaptainAmerica:BraveNewWorldBackground.png';
+import { fetchMovieDetail, fetchMovieCasts } from '@/services/detailApi';
+import { BaseMovie, Cast } from '@/types/movie';
 
 export const Detail = () => {
-  // nanti kalau pakai fetch API, data ini bisa diganti state atau props
-  const movieDetail = {
-    backgroundUrl: DetailBackground,
-    posterUrl: CaptainAmericaPoster,
-    title: 'Captain America: Brave New World',
-    releaseDate: '12 Februari 2025',
-    rating: 8.2,
-    genre: 'Action',
-    ageLimit: 13,
-  };
+  const { id } = useParams<{ id: string }>();
+  const [movie, setMovie] = useState<BaseMovie | null>(null);
+  const [casts, setCasts] = useState<Cast[]>([]);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchData = async () => {
+      const movieData = await fetchMovieDetail(Number(id));
+      const castData = await fetchMovieCasts(Number(id));
+      setMovie(movieData);
+      setCasts(castData);
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (!movie) return <div>Loading...</div>;
 
   return (
     <ToastProvider>
       <Header />
-      <DetailCard {...movieDetail} />
+      <DetailCard {...movie} casts={casts} />
       <Footer />
     </ToastProvider>
   );

@@ -9,7 +9,7 @@ import { Footer } from '@/components/layout/Footer';
 import { getTrendingMovies } from '@/services/tmdb';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration/useScrollRestoration';
 import { BaseMovie } from '@/types/movie';
-import { normalizeMovie } from '@/utils/normalizeMovie';
+import { normalizeMovie } from '@/utils/normalize/normalizeMovie';
 
 export const Home: React.FC = () => {
   const [trendingMovies, setTrendingMovies] = useState<BaseMovie[]>([]);
