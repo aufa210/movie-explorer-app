@@ -4,7 +4,7 @@
   flex-direction: column;
   padding: rem-calc(223) rem-calc(16) 0 rem-calc(16);
   gap: get-spacing('spacing-3xl');
-  
+
   @include md {
     padding: rem-calc(298) rem-calc(140) rem-calc(199) rem-calc(140);
     gap: get-spacing('spacing-6xl');
@@ -33,7 +33,12 @@
     right: 0;
     height: 100%;
     z-index: 1;
-    background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      transparent 100%
+    );
   }
 
   .textBlock {

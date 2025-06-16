@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './DetailCard.module.scss';
 import iconStyles from '@/components/ui/Button/Button.module.scss';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button/Button';
 import { HeartIcon } from '@/components/ui/HeartIcon';
 import { MetaCard } from '@/components/ui/MetaCard';
@@ -118,7 +119,14 @@ export const DetailCard: React.FC<MovieDetail> = ({
         <div
           className={styles.background}
           style={{ backgroundImage: `url(${backdropUrl})` }}
-        />
+        >
+          <motion.div
+            className={styles.gradientOverlay}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          />
+        </div>
       )}
 
       <div className={styles.detailCard}>

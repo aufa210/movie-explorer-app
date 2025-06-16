@@ -3,11 +3,13 @@
   display: flex;
   flex-direction: column;
   gap: get-spacing('spacing-3xl');
-  padding: rem-calc(222) get-spacing('spacing-xl') rem-calc(40) get-spacing('spacing-xl');
+  padding: rem-calc(222) get-spacing('spacing-xl') rem-calc(40)
+    get-spacing('spacing-xl');
 
   @include md {
     gap: get-spacing('spacing-6xl');
-    padding: rem-calc(412) get-spacing('spacing-11xl') rem-calc(149) get-spacing('spacing-11xl');
+    padding: rem-calc(412) get-spacing('spacing-11xl') rem-calc(149)
+      get-spacing('spacing-11xl');
   }
 
   .background {
@@ -20,21 +22,25 @@
     background-position: center;
     background-repeat: no-repeat;
 
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
-      z-index: 1;
-
-      @include md {
-        background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
-      }
-    }
-
     @include md {
-      height: rem-calc(810);
+      height: 100vh;
+      filter: brightness(0.74);
     }
+  }
+
+  .gradientOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      transparent 100%
+    );
   }
 
   .detailCard {
@@ -87,6 +93,7 @@
 
         .date {
           display: flex;
+          align-items: center;
           gap: get-spacing('spacing-xs');
 
           .icon {
@@ -124,6 +131,7 @@
 
             .date {
               display: flex;
+              align-items: center;
               gap: get-spacing('spacing-md');
 
               .icon {
@@ -156,7 +164,7 @@
                 }
 
                 &.active .heartIcon {
-                  fill: #E41D02;
+                  fill: #e41d02;
                   transform: scale(1.1);
                 }
               }
@@ -196,7 +204,7 @@
           }
 
           &.active .heartIcon {
-            fill: #E41D02;
+            fill: #e41d02;
             transform: scale(1.1);
           }
         }
