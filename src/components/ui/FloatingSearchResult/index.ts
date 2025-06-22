@@ -1,0 +1,1 @@
+export { FloatingSearchResult } from './FloatingSearchResult';

@@ -1,26 +1,26 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-export function useScrollRestoration(shouldWait = false): void {
+export function useScrollRestoration(disabled: boolean = false): void {
+  const location = useLocation();
+  const key = `scroll-position:${location.pathname}`;
+
   useEffect(() => {
-    const SCROLL_KEY = 'scrollY';
+    if (disabled) return;
 
-    const restoreScroll = () => {
-      const savedScrollY = sessionStorage.getItem(SCROLL_KEY);
-      if (!shouldWait && savedScrollY !== null) {
-        window.scrollTo(0, parseInt(savedScrollY, 10));
-        sessionStorage.removeItem(SCROLL_KEY);
-      }
+    const savedY = sessionStorage.getItem(key);
+    if (savedY !== null) {
+      window.scrollTo(0, parseInt(savedY, 10));
+    }
+
+    const handleScroll = () => {
+      sessionStorage.setItem(key, String(window.scrollY));
     };
 
-    const saveScroll = () => {
-      sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
-    };
-
-    restoreScroll();
-    window.addEventListener('beforeunload', saveScroll);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('beforeunload', saveScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [shouldWait]);
+  }, [disabled, location.pathname]);
 }

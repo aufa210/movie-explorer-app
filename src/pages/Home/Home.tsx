@@ -10,6 +10,7 @@ import { getTrendingMovies } from '@/services/tmdb';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration/useScrollRestoration';
 import { BaseMovie } from '@/types/movie';
 import { normalizeMovie } from '@/utils/normalize/normalizeMovie';
+import { FloatingSearchResult } from '@/components/ui/FloatingSearchResult/FloatingSearchResult';
 
 export const Home: React.FC = () => {
   const [trendingMovies, setTrendingMovies] = useState<BaseMovie[]>([]);
@@ -51,6 +52,8 @@ export const Home: React.FC = () => {
   return (
     <div>
       <Header />
+      <FloatingSearchResult movies={trendingMovies} />
+
       {trendingHeroMovie && <Hero {...trendingHeroMovie} />}
       <TrendingNow movies={trendingMovies} />
       <ExploreMore onReady={() => setExploreReady(true)} />

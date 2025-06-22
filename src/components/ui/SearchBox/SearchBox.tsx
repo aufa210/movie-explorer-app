@@ -1,38 +1,35 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './SearchBox.module.scss';
 import SearchIcon from '@/assets/Search.svg';
 import ClearIcon from '@/assets/CloseRound.svg';
+import { useSearch } from '@/context/SearchContext';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface SearchBarProps {
   placeholder?: string;
-  onSearch?: (query: string) => void;
   fullWidth?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = 'Search Movie',
-  onSearch,
   fullWidth = false,
 }) => {
-  const [query, setQuery] = useState<string>('');
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const { searchTerm, setSearchTerm, setSearchOpen, resetSearch } = useSearch();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const debouncedValue = useDebounce(searchTerm, 300); // delay filter trigger (optional)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setQuery(value);
-    if (onSearch) onSearch(value);
+    setSearchTerm(value);
+    setSearchOpen(true);
   };
 
   const handleClear = () => {
-    setQuery('');
-    if (onSearch) onSearch('');
+    resetSearch();
     inputRef.current?.focus();
   };
-
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') handleClear();
@@ -42,7 +39,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     <div
       className={clsx(
         styles.searchBar,
-        isFocused && styles.focused,
+        searchTerm && styles.focused,
         fullWidth && styles.fullWidth
       )}
     >
@@ -53,15 +50,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <input
           ref={inputRef}
           type='text'
-          value={query}
+          value={searchTerm}
           onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={styles.searchInput}
         />
-        {query && (
+        {searchTerm && (
           <button
             className={styles.clearButtonWrapper}
             onClick={handleClear}
