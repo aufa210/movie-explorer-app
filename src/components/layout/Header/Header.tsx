@@ -12,23 +12,31 @@ import { useSearch } from '@/context/SearchContext';
 
 export const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false); // mobile only
   const [scrolled, setScrolled] = useState(false);
-  const { searchTerm } = useSearch(); // ambil global inputan user
+  const [isMobile, setIsMobile] = useState(false); // ✅ detect screen size
+  const { searchTerm, searchOpen, setSearchOpen, resetSearch } = useSearch();
 
-  // Lock body scroll untuk mobile overlay
+  // ✅ Detect viewport untuk mobile
   useEffect(() => {
-    document.body.style.overflow = menuOpen || searchOpen ? 'hidden' : 'auto';
-  }, [menuOpen, searchOpen]);
+    const checkIsMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
-  // Track scroll untuk efek blur
+  // ✅ Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow =
+      menuOpen || (isMobile && searchOpen) ? 'hidden' : 'auto';
+  }, [menuOpen, searchOpen, isMobile]);
+
+  // ✅ Blur header saat scroll / ada input
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Header blur logic
   const shouldBlur = scrolled || searchTerm.trim().length > 0;
 
   return (
@@ -59,7 +67,7 @@ export const Header: React.FC = () => {
           <button
             className={styles.iconButton}
             aria-label='Open search'
-            onClick={() => setSearchOpen(true)}
+            onClick={() => isMobile && setSearchOpen(true)} // ✅ hanya aktif di mobile
           >
             <SearchIcon />
           </button>
@@ -73,21 +81,23 @@ export const Header: React.FC = () => {
         </div>
       </motion.header>
 
-      {/* MOBILE SEARCH OVERLAY */}
-      <div className={clsx(styles.searchOverlay, searchOpen && styles.open)}>
-        <div className={styles.searchHeader}>
-          <button
-            className={styles.backButton}
-            aria-label='Back'
-            onClick={() => setSearchOpen(false)}
-          >
-            <LeftArrowIcon />
-          </button>
-          <SearchBox placeholder='Search Movie' fullWidth />
+      {/* ✅ HANYA render overlay mobile jika di device mobile */}
+      {isMobile && searchOpen && (
+        <div className={clsx(styles.searchOverlay, searchOpen && styles.open)}>
+          <div className={styles.searchHeader}>
+            <button
+              className={styles.backButton}
+              aria-label='Back'
+              onClick={() => resetSearch()}
+            >
+              <LeftArrowIcon />
+            </button>
+            <SearchBox placeholder='Search Movie' fullWidth />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* MOBILE MENU OVERLAY */}
+      {/* ✅ Mobile Menu Overlay */}
       <div className={clsx(styles.mobileOverlay, menuOpen && styles.open)}>
         <div className={styles.overlayHeader}>
           <MovieIcon className={styles.overlayLogo} />
@@ -99,7 +109,6 @@ export const Header: React.FC = () => {
             <CloseIcon />
           </button>
         </div>
-
         <nav className={styles.navMobile}>
           <a href='/' onClick={() => setMenuOpen(false)}>
             Home

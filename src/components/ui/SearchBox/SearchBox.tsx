@@ -19,7 +19,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onFocus,
   onBlur,
 }) => {
-  const { searchTerm, setSearchTerm, setSearchOpen, resetSearch } = useSearch();
+  const { searchTerm, setSearchTerm, setSearchOpen } = useSearch();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const debouncedValue = useDebounce(searchTerm, 300);
@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleClear = () => {
-    resetSearch();
+    setSearchTerm(''); // ✅ hanya clear input
     inputRef.current?.focus();
   };
 
