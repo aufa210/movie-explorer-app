@@ -10,27 +10,23 @@ import { getTrendingMovies } from '@/services/tmdb';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration/useScrollRestoration';
 import { BaseMovie } from '@/types/movie';
 import { normalizeMovie } from '@/utils/normalize/normalizeMovie';
-import { FloatingSearchResult } from '@/components/ui/FloatingSearchResult/FloatingSearchResult'; // ✅ Tambahan
+import { FloatingSearchResult } from '@/components/ui/FloatingSearchResult/FloatingSearchResult';
 
 export const Home: React.FC = () => {
   const [trendingMovies, setTrendingMovies] = useState<BaseMovie[]>([]);
+  const [exploreMovies, setExploreMovies] = useState<BaseMovie[]>([]);
   const [loading, setLoading] = useState(true);
   const [exploreReady, setExploreReady] = useState(false);
 
-  // Scroll restoration hook: wait until loading and explore section is ready
   useScrollRestoration(loading || !exploreReady);
 
-  // Fetch trending movies on mount
   useEffect(() => {
     const fetchTrendingMovies = async () => {
       try {
         const trendingRes = await getTrendingMovies();
-
-        // Map TMDB data to your Movie interface
         const trending = trendingRes.results.map((m: any) =>
           normalizeMovie({ ...m, isTrending: true, index: m.id })
         );
-
         setTrendingMovies(trending);
       } catch (error) {
         console.error('Failed to fetch trending movies:', error);
@@ -42,22 +38,28 @@ export const Home: React.FC = () => {
     fetchTrendingMovies();
   }, []);
 
+  const allMovies = React.useMemo(() => {
+    const map = new Map<number, BaseMovie>();
+    [...trendingMovies, ...exploreMovies].forEach((m) => map.set(m.id, m));
+    return Array.from(map.values());
+  }, [trendingMovies, exploreMovies]);
+
   if (loading) {
     return <LoadingAnimation text='Loading Content...' onlyText={true} />;
   }
 
-  // First trending movie for Hero section
   const trendingHeroMovie = trendingMovies[0];
 
   return (
     <div>
       <Header />
-      {/* ✅ Hasil pencarian live */}
-      <FloatingSearchResult movies={trendingMovies} />
-
+      <FloatingSearchResult movies={allMovies} />
       {trendingHeroMovie && <Hero {...trendingHeroMovie} />}
       <TrendingNow movies={trendingMovies} />
-      <ExploreMore onReady={() => setExploreReady(true)} />
+      <ExploreMore
+        onReady={() => setExploreReady(true)}
+        onMoviesLoaded={setExploreMovies}
+      />
       <ScrollButton />
       <Footer />
     </div>

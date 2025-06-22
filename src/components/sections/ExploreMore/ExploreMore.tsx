@@ -13,13 +13,18 @@ import type { BaseMovie } from '@/types/movie';
 
 interface ExploreMoreProps {
   onReady?: () => void;
+  onMoviesLoaded?: (movies: BaseMovie[]) => void;
 }
 
 const INITIAL_LOAD = 50;
 const LOAD_STEP = 25;
 const STORAGE_KEY = 'exploreMoreState';
+const STORAGE_VERSION = 2; // ✅ Ganti jika struktur movie berubah
 
-export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
+export const ExploreMore: React.FC<ExploreMoreProps> = ({
+  onReady,
+  onMoviesLoaded,
+}) => {
   const { gridRef, cols, lastRowIndices, recalculateGrid } = useGridLayout();
   const [movies, setMovies] = useState<BaseMovie[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,47 +34,60 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
 
   useEffect(() => {
     const saved = sessionStorage.getItem(STORAGE_KEY);
+
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        if (parsed.version !== STORAGE_VERSION)
+          throw new Error('Cache outdated');
+
         setMovies(parsed.movies);
         setCurrentPage(parsed.currentPage);
         setMaxVisible(parsed.maxVisible);
         setLayoutReady(false);
+        onMoviesLoaded?.(parsed.movies);
+        return;
       } catch {
-        fetchInitialMovies();
+        console.warn('⚠️ Cache invalid. Refetching from network...');
+        sessionStorage.removeItem(STORAGE_KEY);
       }
-    } else fetchInitialMovies();
+    }
+
+    fetchInitialMovies();
 
     async function fetchInitialMovies() {
       setIsLoading(true);
       try {
         const initial = await getPopularMoviesChunk(0, INITIAL_LOAD);
-        setMovies(removeDuplicateMovies(initial));
+        const unique = removeDuplicateMovies(initial);
+        setMovies(unique);
         setCurrentPage(1);
         setMaxVisible(INITIAL_LOAD);
+        onMoviesLoaded?.(unique);
       } finally {
         setIsLoading(false);
       }
     }
   }, []);
 
-  // Save to sessionStorage on movies, currentPage or maxVisible change
   useEffect(() => {
     if (movies.length) {
       sessionStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ movies, currentPage, maxVisible })
+        JSON.stringify({
+          version: STORAGE_VERSION,
+          movies,
+          currentPage,
+          maxVisible,
+        })
       );
     }
   }, [movies, currentPage, maxVisible]);
 
-  // Recalculate grid on changes
   useEffect(() => {
     recalculateGrid();
   }, [movies, maxVisible, recalculateGrid]);
 
-  // Trigger onReady once layout is ready
   useEffect(() => {
     if (
       movies.length > 0 &&
@@ -85,15 +103,17 @@ export const ExploreMore: React.FC<ExploreMoreProps> = ({ onReady }) => {
   const handleLoadMore = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const startIndex = maxVisible; // start dari jumlah visible item sekarang
+      const startIndex = maxVisible;
       const newMovies = await getPopularMoviesChunk(startIndex, LOAD_STEP);
-      setMovies((prev) => removeDuplicateMovies([...prev, ...newMovies]));
+      const updated = removeDuplicateMovies([...movies, ...newMovies]);
+      setMovies(updated);
       setCurrentPage((prev) => prev + 1);
       setMaxVisible((prev) => prev + LOAD_STEP);
+      onMoviesLoaded?.(updated);
     } finally {
       setIsLoading(false);
     }
-  }, [maxVisible]);
+  }, [maxVisible, movies, onMoviesLoaded]);
 
   const visibleMovies = React.useMemo(
     () => movies.slice(0, Math.min(maxVisible, movies.length)),

@@ -1,9 +1,27 @@
 import axios from 'axios';
 import { BaseMovie } from '@/types/movie';
+import { normalizeMovie } from '@/utils/normalize/normalizeMovie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
-const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
+
+/**
+ * Fetch movie detail overview if not available in /discover/movie
+ */
+async function fetchMovieOverview(movieId: number): Promise<string> {
+  try {
+    const res = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+      params: {
+        api_key: API_KEY,
+        language: 'en-US',
+      },
+    });
+    return res.data?.overview || 'No overview available.';
+  } catch (error) {
+    console.warn(`❌ Failed to fetch detail for movie ${movieId}`, error);
+    return 'No overview available.';
+  }
+}
 
 export async function getPopularMoviesChunk(
   startIndex: number,
@@ -24,24 +42,33 @@ export async function getPopularMoviesChunk(
           language: 'en-US',
         },
       });
-
       allMovies = allMovies.concat(res.data.results);
     }
   } catch (error) {
-    console.error('Error fetching movies:', error);
-    return []; // Graceful fallback: return array kosong kalau error
+    console.error('❌ Error fetching movie list from /discover/movie', error);
+    return [];
   }
 
   const offset = startIndex % itemsPerPage;
   const sliced = allMovies.slice(offset, offset + count);
 
-  return sliced.map((movie: any) => ({
-    id: movie.id,
-    movieId: movie.id,
-    title: movie.title,
-    poster: movie.poster_path
-      ? `${BASE_IMAGE_URL}${movie.poster_path}`
-      : '/default-poster.jpg',
-    rating: movie.vote_average,
-  }));
+  const normalizedMovies: BaseMovie[] = await Promise.all(
+    sliced.map(async (rawMovie, idx) => {
+      const overview =
+        rawMovie.overview && rawMovie.overview.trim().length > 0
+          ? rawMovie.overview
+          : await fetchMovieOverview(rawMovie.id);
+
+      const enrichedMovie = {
+        ...rawMovie,
+        overview,
+        index: startIndex + idx,
+        isTrending: false,
+      };
+
+      return normalizeMovie(enrichedMovie);
+    })
+  );
+
+  return normalizedMovies;
 }
