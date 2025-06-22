@@ -5,7 +5,10 @@ const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
-export async function getPopularMoviesChunk(startIndex: number, count: number): Promise<BaseMovie[]> {
+export async function getPopularMoviesChunk(
+  startIndex: number,
+  count: number
+): Promise<BaseMovie[]> {
   const itemsPerPage = 20;
   const startPage = Math.floor(startIndex / itemsPerPage) + 1;
   const endPage = Math.floor((startIndex + count - 1) / itemsPerPage) + 1;
@@ -26,7 +29,7 @@ export async function getPopularMoviesChunk(startIndex: number, count: number): 
     }
   } catch (error) {
     console.error('Error fetching movies:', error);
-    return [];  // Graceful fallback: return array kosong kalau error
+    return []; // Graceful fallback: return array kosong kalau error
   }
 
   const offset = startIndex % itemsPerPage;

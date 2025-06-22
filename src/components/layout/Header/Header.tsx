@@ -8,23 +8,28 @@ import SearchIcon from '@/assets/SearchWhite.svg';
 import MenuIcon from '@/assets/HamburgerMenu.svg';
 import CloseIcon from '@/assets/Close.svg';
 import LeftArrowIcon from '@/assets/LeftArrow.svg';
+import { useSearch } from '@/context/SearchContext';
 
 export const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false); // mobile only
   const [scrolled, setScrolled] = useState(false);
+  const { searchTerm } = useSearch(); // ambil global inputan user
 
-  // Lock body scroll when any overlay is open
+  // Lock body scroll untuk mobile overlay
   useEffect(() => {
     document.body.style.overflow = menuOpen || searchOpen ? 'hidden' : 'auto';
   }, [menuOpen, searchOpen]);
 
-  // Glass effect on scroll
+  // Track scroll untuk efek blur
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Header blur logic
+  const shouldBlur = scrolled || searchTerm.trim().length > 0;
 
   return (
     <>
@@ -32,7 +37,7 @@ export const Header: React.FC = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={clsx(styles.header, scrolled && styles.scrolled)}
+        className={clsx(styles.header, shouldBlur && styles.scrolled)}
       >
         <div className={styles.left}>
           <MovieIcon className={styles.logo} />

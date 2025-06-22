@@ -10,7 +10,7 @@ import { getTrendingMovies } from '@/services/tmdb';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration/useScrollRestoration';
 import { BaseMovie } from '@/types/movie';
 import { normalizeMovie } from '@/utils/normalize/normalizeMovie';
-import { FloatingSearchResult } from '@/components/ui/FloatingSearchResult/FloatingSearchResult';
+import { FloatingSearchResult } from '@/components/ui/FloatingSearchResult/FloatingSearchResult'; // ✅ Tambahan
 
 export const Home: React.FC = () => {
   const [trendingMovies, setTrendingMovies] = useState<BaseMovie[]>([]);
@@ -52,6 +52,7 @@ export const Home: React.FC = () => {
   return (
     <div>
       <Header />
+      {/* ✅ Hasil pencarian live */}
       <FloatingSearchResult movies={trendingMovies} />
 
       {trendingHeroMovie && <Hero {...trendingHeroMovie} />}
