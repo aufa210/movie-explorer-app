@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Hero } from '@/components/sections/Hero';
 import { TrendingNow } from '@/components/sections/TrendingNow';
@@ -11,6 +11,7 @@ import { useScrollRestoration } from '@/hooks/useScrollRestoration/useScrollRest
 import { BaseMovie } from '@/types/movie';
 import { normalizeMovie } from '@/utils/normalize/normalizeMovie';
 import { FloatingSearchResult } from '@/components/ui/FloatingSearchResult/FloatingSearchResult';
+import { useMovie } from '@/context/MovieContext';
 
 export const Home: React.FC = () => {
   const [trendingMovies, setTrendingMovies] = useState<BaseMovie[]>([]);
@@ -18,6 +19,7 @@ export const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [exploreReady, setExploreReady] = useState(false);
 
+  const { setAllMovies } = useMovie();
   useScrollRestoration(loading || !exploreReady);
 
   useEffect(() => {
@@ -38,11 +40,15 @@ export const Home: React.FC = () => {
     fetchTrendingMovies();
   }, []);
 
-  const allMovies = React.useMemo(() => {
+  const allMovies = useMemo(() => {
     const map = new Map<number, BaseMovie>();
     [...trendingMovies, ...exploreMovies].forEach((m) => map.set(m.id, m));
     return Array.from(map.values());
   }, [trendingMovies, exploreMovies]);
+
+  useEffect(() => {
+    setAllMovies(allMovies);
+  }, [allMovies]);
 
   if (loading) {
     return <LoadingAnimation text='Loading Content...' onlyText={true} />;
