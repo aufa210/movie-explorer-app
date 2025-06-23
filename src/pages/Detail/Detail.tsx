@@ -28,6 +28,12 @@ export const Detail = () => {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    if (movie?.id) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [movie?.id]);
+
   if (!movie) return <div>Loading...</div>;
 
   return (

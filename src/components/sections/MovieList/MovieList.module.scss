@@ -1,6 +1,12 @@
 .cardWrapper {
   padding: rem-calc(32) 0;
   border-bottom: 1px solid get-color('neutral', 800);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(0.97);
+  }
 
   @include md {
     padding: rem-calc(48) 0;
