@@ -37,7 +37,21 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const shouldBlur = scrolled || searchTerm.trim().length > 0;
+  const [shouldBlur, setShouldBlur] = useState(false);
+
+  useEffect(() => {
+    if (scrolled || searchTerm.trim().length > 0) {
+      setShouldBlur(true);
+    } else {
+      if (isMobile) {
+        setShouldBlur(false); // 👈 Mobile langsung hilang blur
+      } else {
+        // 👇 Desktop ada delay untuk sinkronisasi
+        const timeout = setTimeout(() => setShouldBlur(false), 300);
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [scrolled, searchTerm, isMobile]);
 
   return (
     <>
