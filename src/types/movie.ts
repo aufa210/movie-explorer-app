@@ -12,15 +12,15 @@ export interface BaseMovie {
   isDisabled?: boolean;
 }
 
-export interface MovieWithCasts extends BaseMovie {
-  casts: Cast[];
-}
-
 export interface Cast {
   id: number;
   name: string;
   character: string;
   profileUrl: string;
+}
+
+export interface MovieWithCasts extends BaseMovie {
+  casts: Cast[];
 }
 
 export interface Crew {
