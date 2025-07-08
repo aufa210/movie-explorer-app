@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { DetailCard } from '@/components/ui/DetailCard';
-import { ToastProvider } from '@/provider/ToastProvider';
 import { fetchMovieDetail, fetchMovieCasts } from '@/services/detailApi';
 import { BaseMovie, Cast } from '@/types/movie';
 import { FloatingSearchResult } from '@/components/ui/FloatingSearchResult/FloatingSearchResult';
@@ -37,11 +36,11 @@ export const Detail = () => {
   if (!movie) return <div>Loading...</div>;
 
   return (
-    <ToastProvider>
+    <div>
       <Header />
       <FloatingSearchResult movies={allMovies} />
       <DetailCard {...movie} casts={casts} />
       <Footer />
-    </ToastProvider>
+    </div>
   );
 };

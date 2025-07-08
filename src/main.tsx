@@ -5,13 +5,16 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { SearchProvider } from './context/SearchContext';
 import { MovieProvider } from '@/context/MovieContext';
+import { ToastProvider } from '@/provider/ToastProvider'; // ✅ Import
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <MovieProvider>
         <SearchProvider>
-          <App />
+          <ToastProvider>
+            <App />
+          </ToastProvider>
         </SearchProvider>
       </MovieProvider>
     </BrowserRouter>
