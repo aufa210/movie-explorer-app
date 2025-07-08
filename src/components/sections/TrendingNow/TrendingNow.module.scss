@@ -6,14 +6,17 @@
   gap: get-spacing('spacing-3xl');
 
   @include md {
-    padding: 0 get-spacing('spacing-11xl') get-spacing('spacing-8xl') get-spacing('spacing-11xl');
+    padding: 0 get-spacing('spacing-11xl') get-spacing('spacing-8xl')
+      get-spacing('spacing-11xl');
     gap: get-spacing('spacing-5xl');
   }
 
   h2 {
     @include typography('display-xs', 'bold');
     color: get-color('neutral', 25);
-    @include md { @include typography('display-lg', 'bold'); }
+    @include md {
+      @include typography('display-lg', 'bold');
+    }
   }
 }
 
@@ -24,10 +27,12 @@
   &::after {
     content: '';
     position: absolute;
-    top: 0; height: 100%; width: rem-calc(60);
+    top: 0;
+    height: 100%;
+    width: rem-calc(60);
     pointer-events: none;
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
     z-index: 2;
   }
   &::before {
@@ -38,9 +43,12 @@
     right: 0;
     background: linear-gradient(to left, #000 0%, transparent);
   }
-  &.fadeLeft::before { opacity: 1; }
-  &.fadeRight::after { opacity: 1; }
-  background-color: #000; /* safety */
+  &.fadeLeft::before {
+    opacity: 1;
+  }
+  &.fadeRight::after {
+    opacity: 1;
+  }
 }
 
 .carousel {
@@ -49,19 +57,20 @@
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   gap: get-spacing('spacing-xl');
-  background-color: #000; /* safety */
 
   /* center‐snap via padding */
-  scroll-padding-left: calc((100% - #{rem-calc(172.5)})/2);
-  scroll-padding-right: calc((100% - #{rem-calc(172.5)})/2);
+  scroll-padding-left: calc((100% - #{rem-calc(172.5)}) / 2);
+  scroll-padding-right: calc((100% - #{rem-calc(172.5)}) / 2);
 
   @include md {
     gap: get-spacing('spacing-2xl');
-    scroll-padding-left: calc((100% - #{rem-calc(216)})/2);
-    scroll-padding-right: calc((100% - #{rem-calc(216)})/2);
+    scroll-padding-left: calc((100% - #{rem-calc(216)}) / 2);
+    scroll-padding-right: calc((100% - #{rem-calc(216)}) / 2);
   }
 
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -70,7 +79,6 @@
   flex: 0 0 rem-calc(173);
   max-width: rem-calc(173);
   scroll-snap-align: center;
-  background-color: #000; /* safety */
 
   @include md {
     flex: 0 0 rem-calc(216);
