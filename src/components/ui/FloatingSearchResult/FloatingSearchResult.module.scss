@@ -14,9 +14,11 @@
   scroll-behavior: smooth;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   -ms-overflow-style: none;
   scrollbar-width: none;
 
@@ -33,8 +35,17 @@
 .results {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: rem-calc(32);
+  width: 100%;
+
+  // Agar MovieList melebarkan diri sesuai container
+  > * {
+    width: 100%;
+  }
+
+  @include md {
+    gap: rem-calc(40);
+  }
 
   .notFound {
     display: flex;
