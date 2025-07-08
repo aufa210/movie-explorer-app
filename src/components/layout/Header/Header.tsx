@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import clsx from 'clsx';
 import styles from './Header.module.scss';
-import SearchBox from '../../ui/SearchBox/SearchBox';
+import clsx from 'clsx';
+import { motion } from 'framer-motion';
+import { SearchBox } from '@/components/ui/SearchBox';
+import { useSearch } from '@/context/SearchContext';
+import CloseIcon from '@/assets/Close.svg';
 import MovieIcon from '@/assets/MovieLogo.svg';
 import SearchIcon from '@/assets/SearchWhite.svg';
 import MenuIcon from '@/assets/HamburgerMenu.svg';
-import CloseIcon from '@/assets/Close.svg';
 import LeftArrowIcon from '@/assets/LeftArrow.svg';
-import { useSearch } from '@/context/SearchContext';
 
 export const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
             <a href='/' className={styles.home}>
               Home
             </a>
-            <a href='/favorites' className={styles.favorites}>
+            <a href='/favorite' className={styles.favorites}>
               Favorites
             </a>
           </nav>
@@ -127,7 +127,7 @@ export const Header: React.FC = () => {
           <a href='/' onClick={() => setMenuOpen(false)}>
             Home
           </a>
-          <a href='/favorites' onClick={() => setMenuOpen(false)}>
+          <a href='/favorite' onClick={() => setMenuOpen(false)}>
             Favorites
           </a>
         </nav>

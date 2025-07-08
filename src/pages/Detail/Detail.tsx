@@ -28,7 +28,6 @@ export const Detail = () => {
     fetchData();
   }, [id]);
 
-  // ✅ Smooth scroll to top setiap kali movie detail berubah
   useEffect(() => {
     if (movie?.id) {
       window.scrollTo({ top: 0, behavior: 'smooth' });

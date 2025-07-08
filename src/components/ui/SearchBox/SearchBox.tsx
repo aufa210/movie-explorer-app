@@ -6,14 +6,14 @@ import ClearIcon from '@/assets/CloseRound.svg';
 import { useSearch } from '@/context/SearchContext';
 import { useDebounce } from '@/hooks/useDebounce';
 
-interface SearchBarProps {
+interface SearchBoxProps {
   placeholder?: string;
   fullWidth?: boolean;
   onFocus?: () => void;
   onBlur?: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
+export const SearchBox: React.FC<SearchBoxProps> = ({
   placeholder = 'Search Movie',
   fullWidth = false,
   onFocus,
@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleClear = () => {
-    setSearchTerm(''); // ✅ hanya clear input
+    setSearchTerm('');
     inputRef.current?.focus();
   };
 
@@ -42,7 +42,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div
       className={clsx(
-        styles.searchBar,
+        styles.searchBox,
         searchTerm && styles.focused,
         fullWidth && styles.fullWidth
       )}
@@ -75,5 +75,3 @@ const SearchBar: React.FC<SearchBarProps> = ({
     </div>
   );
 };
-
-export default SearchBar;
