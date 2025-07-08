@@ -1,1 +1,22 @@
+.favoriteWrapper {
+  padding: rem-calc(0) rem-calc(16);
 
+  @include md {
+    padding: rem-calc(0) rem-calc(140);
+  }
+
+  .title {
+    padding-top: rem-calc(88);
+    color: get-color('neutral', 25);
+    @include typography('display-xs', 'bold');
+
+    @include md {
+      padding-top: rem-calc(154);
+      @include typography('display-lg', 'bold');
+    }
+  }
+
+  .found {
+    padding-bottom: rem-calc(150);
+  }
+}

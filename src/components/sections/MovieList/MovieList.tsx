@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
+import React from 'react';
 import styles from './MovieList.module.scss';
 import iconStyles from '@/components/ui/Button/Button.module.scss';
 import { Button } from '@/components/ui/Button';
-import { HeartIcon } from '@/components/ui/HeartIcon';
 import { BaseMovie } from '@/types/movie';
+import { FavoriteButton } from '@/components/ui/FavoriteButton';
 import StarIcon from '@/assets/Star.svg';
 import PlayIcon from '@/assets/Play.svg';
 import { useNavigate } from 'react-router-dom';
 import { useSearch } from '@/context/SearchContext';
 import { fetchTrailerKey } from '@/utils/fetchTrailer';
+import { useFavoriteStore } from '@/store/useFavoriteStore';
 
 export const MovieList: React.FC<BaseMovie> = ({
   id,
@@ -18,18 +18,19 @@ export const MovieList: React.FC<BaseMovie> = ({
   rating,
   overview,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
   const { resetSearch } = useSearch();
 
+  const { isFavorite, addFavorite, removeFavorite } = useFavoriteStore();
+
   const handleRedirect = () => {
-    resetSearch(); // ✅ Close floating search
-    navigate(`/detail/${id}`); // ✅ Go to detail
+    resetSearch();
+    navigate(`/detail/${id}`);
   };
 
   const handleWatchTrailer = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // ✅ Prevent redirect
+    e.stopPropagation();
     setIsLoading(true);
     const key = await fetchTrailerKey(id);
     setIsLoading(false);
@@ -37,13 +38,17 @@ export const MovieList: React.FC<BaseMovie> = ({
     if (key) {
       window.open(`https://www.youtube.com/watch?v=${key}`, '_blank');
     } else {
-      alert("Trailer isn't available"); // Replace with toast if needed
+      alert("Trailer isn't available");
     }
   };
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
-    e.stopPropagation(); // ✅ Prevent redirect
-    setIsFavorite(!isFavorite);
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isFavorite(id)) {
+      removeFavorite(id);
+    } else {
+      addFavorite({ id, poster, title, rating, overview });
+    }
   };
 
   return (
@@ -97,36 +102,18 @@ export const MovieList: React.FC<BaseMovie> = ({
             )}
           </Button>
           <div className={styles.favoriteButtonWrapper}>
-            <Button
-              variant='secondary'
-              fullWidth={false}
-              aria-pressed={isFavorite}
-              aria-label={
-                isFavorite ? 'Remove from favorites' : 'Add to favorites'
-              }
-              className={clsx(
-                styles.favoriteButton,
-                isFavorite && styles.active
-              )}
-              onClick={handleToggleFavorite}
-            >
-              <HeartIcon className={styles.heartIcon} filled={isFavorite} />
-            </Button>
+            <FavoriteButton
+              isFavorite={isFavorite(id)}
+              onClick={toggleFavorite}
+            />
           </div>
         </div>
 
         <div className={styles.topRightButton}>
-          <Button
-            variant='secondary'
-            aria-pressed={isFavorite}
-            aria-label={
-              isFavorite ? 'Remove from favorites' : 'Add to favorites'
-            }
-            className={clsx(styles.favoriteButton, isFavorite && styles.active)}
-            onClick={handleToggleFavorite}
-          >
-            <HeartIcon className={styles.heartIcon} filled={isFavorite} />
-          </Button>
+          <FavoriteButton
+            isFavorite={isFavorite(id)}
+            onClick={toggleFavorite}
+          />
         </div>
       </div>
     </div>

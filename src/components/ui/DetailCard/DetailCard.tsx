@@ -1,35 +1,21 @@
 import React, { useState } from 'react';
 import styles from './DetailCard.module.scss';
 import iconStyles from '@/components/ui/Button/Button.module.scss';
-import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button/Button';
-import { HeartIcon } from '@/components/ui/HeartIcon';
 import { MetaCard } from '@/components/ui/MetaCard';
 import { CastCard } from '@/components/ui/CastCard';
 import { Toast } from '@/components/ui/Toast';
 import { MovieDetail } from '@/types/movie';
 import { formatDateToIndoLong } from '@/utils/formatDate';
 import { fetchTrailerKey } from '@/utils/fetchTrailer';
+import { FavoriteButton } from '@/components/ui/FavoriteButton';
+import { useFavoriteStore } from '@/store/useFavoriteStore';
 import CalendarIcon from '@/assets/Calendar.svg';
 import PlayIcon from '@/assets/Play.svg';
 import StarIcon from '@/assets/Star.svg';
 import VideoIcon from '@/assets/Video.svg';
 import HappyEmojiIcon from '@/assets/HappyEmoji.svg';
-
-const FavoriteButton: React.FC<{
-  isFavorite: boolean;
-  onClick: () => void;
-}> = ({ isFavorite, onClick }) => (
-  <Button
-    variant='secondary'
-    fullWidth={false}
-    className={clsx(styles.favoriteButton, isFavorite && styles.active)}
-    onClick={onClick}
-  >
-    <HeartIcon className={styles.heartIcon} filled={isFavorite} />
-  </Button>
-);
 
 const CTAButtons: React.FC<{
   isFavorite: boolean;
@@ -65,7 +51,6 @@ const MetaCardsGroup: React.FC<{
       value={`${rating.toFixed(1)}/10`}
     />
     <MetaCard icon={<VideoIcon />} label='Genre' value={genre.join(', ')} />
-
     <MetaCard
       icon={<HappyEmojiIcon />}
       label='Age Limit'
@@ -86,17 +71,20 @@ export const DetailCard: React.FC<MovieDetail> = ({
   ageLimit,
   casts = [],
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const { isFavorite, addFavorite, removeFavorite } = useFavoriteStore();
+
   const toggleFavorite = () => {
-    const newState = !isFavorite;
-    setIsFavorite(newState);
-    setToastMessage(
-      newState ? 'Success Add to Favorites' : 'Success Remove from Favorites'
-    );
+    if (isFavorite(id)) {
+      removeFavorite(id);
+      setToastMessage('Removed from Favorites');
+    } else {
+      addFavorite({ id, poster, title, rating, overview });
+      setToastMessage('Added to Favorites');
+    }
     setShowToast(true);
   };
 
@@ -130,11 +118,9 @@ export const DetailCard: React.FC<MovieDetail> = ({
       )}
 
       <div className={styles.detailCard}>
-        {/* Top Section */}
         <div className={styles.top}>
           <img src={poster} alt={title} className={styles.poster} />
 
-          {/* Mobile Info */}
           <div className={styles.info}>
             <h3 className={styles.title}>{title}</h3>
             <div className={styles.date}>
@@ -145,7 +131,6 @@ export const DetailCard: React.FC<MovieDetail> = ({
             </div>
           </div>
 
-          {/* Desktop Info */}
           <div className={styles.cardContent}>
             <div className={styles.info}>
               <h3 className={styles.title}>{title}</h3>
@@ -157,43 +142,34 @@ export const DetailCard: React.FC<MovieDetail> = ({
               </div>
             </div>
 
-            {/* Desktop CTA */}
             <CTAButtons
-              isFavorite={isFavorite}
+              isFavorite={isFavorite(id)}
               toggleFavorite={toggleFavorite}
               handleWatchTrailer={handleWatchTrailer}
               isLoading={isLoading}
             />
-
-            {/* Desktop MetaCards */}
             <MetaCardsGroup rating={rating} genre={genre} ageLimit={ageLimit} />
           </div>
         </div>
 
-        {/* Mobile CTA */}
         <CTAButtons
-          isFavorite={isFavorite}
+          isFavorite={isFavorite(id)}
           toggleFavorite={toggleFavorite}
           handleWatchTrailer={handleWatchTrailer}
           isLoading={isLoading}
         />
-
-        {/* Mobile MetaCards */}
         <MetaCardsGroup rating={rating} genre={genre} ageLimit={ageLimit} />
 
-        {/* Toast */}
         {showToast && (
           <Toast message={toastMessage} onClose={() => setShowToast(false)} />
         )}
       </div>
 
-      {/* Overview */}
       <div className={styles.overview}>
         <h2 className={styles.overviewTitle}>Overview</h2>
         <p className={styles.overviewText}>{overview}</p>
       </div>
 
-      {/* Cast & Crew */}
       <div className={styles.castAndCrew}>
         <h2 className={styles.castsAndCrews}>Cast & Crew</h2>
         <div className={styles.casters}>
