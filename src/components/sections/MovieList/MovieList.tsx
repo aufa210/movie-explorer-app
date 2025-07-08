@@ -1,3 +1,5 @@
+// components/sections/MovieList/MovieList.tsx
+
 import React from 'react';
 import styles from './MovieList.module.scss';
 import iconStyles from '@/components/ui/Button/Button.module.scss';
@@ -10,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSearch } from '@/context/SearchContext';
 import { fetchTrailerKey } from '@/utils/fetchTrailer';
 import { useFavoriteStore } from '@/store/useFavoriteStore';
+import { useToastContext } from '@/provider/ToastProvider';
 
 export const MovieList: React.FC<BaseMovie> = ({
   id,
@@ -21,7 +24,7 @@ export const MovieList: React.FC<BaseMovie> = ({
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
   const { resetSearch } = useSearch();
-
+  const { showToast } = useToastContext();
   const { isFavorite, addFavorite, removeFavorite } = useFavoriteStore();
 
   const handleRedirect = () => {
@@ -38,16 +41,18 @@ export const MovieList: React.FC<BaseMovie> = ({
     if (key) {
       window.open(`https://www.youtube.com/watch?v=${key}`, '_blank');
     } else {
-      alert("Trailer isn't available");
+      showToast("Trailer isn't available");
     }
   };
 
-  const toggleFavorite = (e: React.MouseEvent) => {
+  const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isFavorite(id)) {
       removeFavorite(id);
+      showToast('Removed from Favorites');
     } else {
       addFavorite({ id, poster, title, rating, overview });
+      showToast('Added to Favorites');
     }
   };
 
@@ -62,6 +67,7 @@ export const MovieList: React.FC<BaseMovie> = ({
               className={styles.image}
             />
           </div>
+
           <div className={styles.text}>
             <div className={styles.textWrapper}>
               <div className={styles.title}>{title}</div>
@@ -71,6 +77,7 @@ export const MovieList: React.FC<BaseMovie> = ({
               </div>
               <div className={styles.description}>{overview}</div>
             </div>
+
             <Button
               className={styles.secondWatchTrailerButton}
               onClick={handleWatchTrailer}
@@ -101,10 +108,11 @@ export const MovieList: React.FC<BaseMovie> = ({
               </>
             )}
           </Button>
+
           <div className={styles.favoriteButtonWrapper}>
             <FavoriteButton
               isFavorite={isFavorite(id)}
-              onClick={toggleFavorite}
+              onClick={handleToggleFavorite}
             />
           </div>
         </div>
@@ -112,7 +120,7 @@ export const MovieList: React.FC<BaseMovie> = ({
         <div className={styles.topRightButton}>
           <FavoriteButton
             isFavorite={isFavorite(id)}
-            onClick={toggleFavorite}
+            onClick={handleToggleFavorite}
           />
         </div>
       </div>
